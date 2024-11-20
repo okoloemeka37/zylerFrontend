@@ -19,7 +19,7 @@ try {
 
 }
 
-
+//this was also used to get Cart too
 
 export async function single(url:string,token:string) {
   try {
@@ -37,7 +37,7 @@ export async function single(url:string,token:string) {
 }
 
 
-
+//this is used as the addtocart function too and addproduct
 
 export async function AddProductFunc(url:string,token:string,data:object) {
     try {
@@ -130,8 +130,53 @@ export async function cat(url:string,token:string) {
 } catch (error) {
     console.log(error)
 }
- 
 }
+
+
+export async function catRelated(url:string) {
+  try {
+    const resp=await axios.get(`http://localhost:8000/api/${url}`);
+ 
+    return {status:200,'result':resp.data};
+
+    
+} catch (error) {
+    console.log(error)
+}
+}
+
+
+export async function Indexcat(url:string) {
+  try {
+    const resp=await axios.get(`http://localhost:8000/api/${url}`);
+ 
+    return {status:200,'result':resp.data};
+
+    
+} catch (error) {
+    console.log(error)
+}
+ 
+
+}
+
+export async function singleIndex(url:string) {
+  try {
+    const resp=await axios.get(`http://localhost:8000/api/${url}`);
+    return {status:200,'result':resp.data};
+    
+} catch (error) {
+    console.log(error)
+}
+ 
+
+
+
+
+
+
+}
+
 
 
 

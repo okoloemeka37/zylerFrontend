@@ -4,6 +4,8 @@ import AuthController from '@/app/actions/Auth'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import ButtonLoaders from '@/app/component/Loaders'
+import { useAuth } from '@/app/context/AuthContext'
 
 interface Ivalues {
   name:string,
@@ -14,7 +16,15 @@ interface Ivalues {
 
 
 export default function Register() {
-  
+  const {login,token}=useAuth();
+  const router=useRouter()
+ if (token) {
+     router.push("../../user/Profile")
+   }
+ 
+
+  const [isLoaded, setisLoaded] = useState(false)
+
   const [error, setErrors] = useState({
     'name':'',
     'email':'',
@@ -30,30 +40,25 @@ const [cred, setCred] = useState<Ivalues>({
   
 
 
-  const router=useRouter()
-  useEffect(() => { 
-    const token=localStorage.getItem("Token")!;
-    if (token !== null) {
-      router.push("../../user/Profile")
-    }}, [])
-
+ 
 
 
     const Register=async (event)=>{
         event.preventDefault();
+        setisLoaded(true)
 
         const rest=await AuthController(cred,'register');
 console.log(rest)
 
 
 if (rest?.status ===200) {
-
-  localStorage.setItem('Token',rest.result.token);
+  login(rest?.result.data.token,rest?.result.data.user)
   router.push("../../product/ViewProduct")
-
+  setisLoaded(false)
 }
 if (rest?.status ==422) {
   setErrors(rest.error);
+  setisLoaded(false)
 }
 
  
@@ -142,8 +147,10 @@ if (rest?.status ==422) {
          />
      
        </div>
-     
-       <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none w-full">SignUp</button>
+       {!isLoaded?(<button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none w-full">SignUp</button>):(<ButtonLoaders ty={'login'} />)}
+       
+
+       
        <div className="mt-4 text-center">
          <p className="text-gray-600 text-sm"> Already have an account? <Link href="/auth/Login">Login</Link> </p>
        </div>

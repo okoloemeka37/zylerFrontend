@@ -1,6 +1,7 @@
 'use client'
 
 import GetProduct, { DeleteProduct } from '@/app/actions/Product';
+import { Products } from '@/app/component/ContentLoader';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -9,6 +10,7 @@ export default function ProductsList({params}) {
 const router=useRouter()
 
   const token:string=localStorage.getItem('Token')!;
+  const [isload, setisload] = useState(false)
 
 
 
@@ -28,12 +30,14 @@ const router=useRouter()
   useEffect(() => {
 
     async function unwrapParams() {
+      setisload(true)
       const resolvedParams = await params;
       setTitle(resolvedParams.productTag);
 
     const res=await GetProduct(`GetProduct/${resolvedParams.productTag}`,token);
 
     setData(res?.result.data);
+    setisload(false);
 console.log()
 
     }
@@ -71,7 +75,7 @@ console.log()
 
     {/* Product Cards */}
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-   {   data.length !== 0?
+   { !isload?  data.length !== 0?
 
       data.map((rel,index)=>(    
       
@@ -97,7 +101,9 @@ console.log()
             </button>
           </div>
         </div>
-      </div>)):(<h1>No Product Available For This Tag</h1> )}
+      </div>)):(<h1>No Product Available For This Tag</h1> ):(
+        <Products/>
+      )}
    
   
     

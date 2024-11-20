@@ -1,8 +1,9 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import Image from 'next/image'
+
 import Link from 'next/link'
 import { cat } from '@/app/actions/Product'
+import { AdmiTag } from '@/app/component/Cards'
 
 export default function Products() {
   const Just=['Top','Bottom','Dress','BodyWears','Footwear','Accessories']
@@ -37,7 +38,7 @@ export default function Products() {
         setBodyWears(res?.result.data)
         break;
 
-        case 'FootWears':
+        case 'Footwear':
           setFootwear(res?.result.data)
           break;
 
@@ -77,170 +78,31 @@ export default function Products() {
   <div className="space-y-8">
     {/* Category: Top */}
 
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-xl font-bold text-gray-700 mb-4">Top</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-
-        {Top.map((data,index)=>(
-             <div className="bg-gray-50 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300" key={index}>
-          <Link href={`../../user/Product/${data.tag}`}>
-          <Image width={100} height={100}
-            src="https://via.placeholder.com/300x200"
-            alt="T-Shirt"
-            className="w-full h-40 object-cover"
-          />
-          <div className="p-4">
-            <h4 className="font-bold text-lg text-gray-700">{data.tag}</h4>
-          
-            <p className="text-gray-600">Stock: {data.stockCount}</p>
-          </div>
-          </Link>
-        </div>
-        ))}
-     
-
-
-
-      </div>
-    </div>
+    <div className="bg-white p-6 rounded-lg shadow-md"> <h3 className="text-xl font-bold text-gray-700 mb-4">Top</h3><AdmiTag Product={Top}/></div>
 
   {/* Category: Bottoms */}
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-xl font-bold text-gray-700 mb-4">Bottoms</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-      {Bottom.map((data,index)=>(
-             <div className="bg-gray-50 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300" key={index}>
-          <Link href={`../../user/Product/${data.tag}`}>
-          <Image width={100} height={100}
-            src="https://via.placeholder.com/300x200"
-            alt="T-Shirt"
-            className="w-full h-40 object-cover"
-          />
-          <div className="p-4">
-            <h4 className="font-bold text-lg text-gray-700">{data.tag}</h4>
-          
-            <p className="text-gray-600">Stock: {data.stockCount}</p>
-          </div>
-          </Link>
-        </div>
-        ))}
-
-       
-
-
-        
-
-
-        
-
-        </div>
-
-
-      
-    </div>
+    <div className="bg-white p-6 rounded-lg shadow-md"> <h3 className="text-xl font-bold text-gray-700 mb-4">Bottoms</h3><AdmiTag Product={Bottom}/></div>
 
 
      {/* Category: Dresses */}
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-xl font-bold text-gray-700 mb-4">Dresses</h3>
-      {Dress.map((data,index)=>(
-             <div className="bg-gray-50 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300" key={index}>
-          <Link href={`../../user/Product/${data.tag}`}>
-          <Image width={100} height={100}
-            src="https://via.placeholder.com/300x200"
-            alt="Dress"
-            className="w-full h-40 object-cover"
-          />
-          <div className="p-4">
-            <h4 className="font-bold text-lg text-gray-700">{data.tag}</h4>
-          
-            <p className="text-gray-600">Stock: {data.stockCount}</p>
-          </div>
-          </Link>
-        </div>
-        ))}
-    </div>
+    <div className="bg-white p-6 rounded-lg shadow-md"><h3 className="text-xl font-bold text-gray-700 mb-4">Dresses</h3> <AdmiTag Product={Dress}/> </div>
 
 
 
 
   {/* Category: BodyWear */}
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-xl font-bold text-gray-700 mb-4">BodyWears</h3>
-      {BodyWears.map((data,index)=>(
-             <div className="bg-gray-50 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300" key={index}>
-          <Link href={`../../user/Product/${data.tag}`}>
-          <Image width={100} height={100}
-            src="https://via.placeholder.com/300x200"
-            alt="T-Shirt"
-            className="w-full h-40 object-cover"
-          />
-          <div className="p-4">
-            <h4 className="font-bold text-lg text-gray-700">{data.tag}</h4>
-          
-            <p className="text-gray-600">Stock: {data.stockCount}</p>
-          </div>
-          </Link>
-        </div>
-        ))}
-    </div>
+    <div className="bg-white p-6 rounded-lg shadow-md"><h3 className="text-xl font-bold text-gray-700 mb-4">BodyWears</h3> <AdmiTag Product={BodyWears}/>   </div>
+
+
+
 
   {/* Category: FootWear */}
-  <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-xl font-bold text-gray-700 mb-4">FootWears</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-      
-      {Footwear.map((data,index)=>(
-             <div className="bg-gray-50 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300" key={index}>
-          <Link href={`../../user/Product/${data.tag}`}>
-          <Image width={100} height={100}
-            src="https://via.placeholder.com/300x200"
-            alt="Foot"
-            className="w-full h-40 object-cover"
-          />
-          <div className="p-4">
-            <h4 className="font-bold text-lg text-gray-700">{data.tag}</h4>
-          
-            <p className="text-gray-600">Stock: {data.stockCount}</p>
-          </div>
-          </Link>
-        </div>
-        ))}
-            
-      </div>
-    </div>
+  <div className="bg-white p-6 rounded-lg shadow-md"><h3 className="text-xl font-bold text-gray-700 mb-4">FootWears</h3><AdmiTag Product={Footwear}/></div>
 
 
   {/* Category: Accessories */}
 
-  <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-xl font-bold text-gray-700 mb-4">Accessories</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-     
-      {Accessories.map((data,index)=>(
-             <div className="bg-gray-50 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300" key={index}>
-          <Link href={`../../user/Product/${data.tag}`}>
-          <Image width={100} height={100}
-            src="https://via.placeholder.com/300x200"
-            alt="Accessories"
-            className="w-full h-40 object-cover"
-          />
-          <div className="p-4">
-            <h4 className="font-bold text-lg text-gray-700">{data.tag}</h4>
-          
-            <p className="text-gray-600">Stock: {data.stockCount}</p>
-          </div>
-          </Link>
-        </div>
-        ))}
-
-
-      </div>
-    </div>
-
-
-
-
+  <div className="bg-white p-6 rounded-lg shadow-md"><h3 className="text-xl font-bold text-gray-700 mb-4">Accessories</h3><AdmiTag Product={Accessories}/> </div>
 
   </div>
 </div>

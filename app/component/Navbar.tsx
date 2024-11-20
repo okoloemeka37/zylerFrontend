@@ -1,36 +1,52 @@
 'use client'
 
 
-import Link from 'next/link';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+
+
 import { LogoutController } from '../actions/Auth';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '../context/AuthContext';
+import { single } from '@/app/actions/Product'
 
+import Link from 'next/link';
+import ButtonLoaders from './Loaders';
+import Image from 'next/image';
 export default function Navbar() {
+
  const route= useRouter()
+ const {logout,isAuthenticated,token,userCred}=useAuth();
 
-  const [token, setToken] = useState(null);
-
-useEffect(() => {
-  const getToken=localStorage.getItem('Token')!;
-  setToken(getToken)
-  console.log(token)
-}, [token])
+ const [isLoaded, setisLoaded] = useState(false)
 
 const Logout=async()=>{
-  
+  setisLoaded(true)
  const response=await LogoutController(token);
- console.log(response)
+
  if (response.status=== 200) {
-  localStorage.removeItem("Token");
-  route.push("http://localhost:3000/auth/Login")
+  logout()
+  route.push("http://localhost:3000/auth/Login");
+  setisLoaded(false)
  }
- setToken(null)
+ 
 }
+
+const [cartNum, setcartNum] = useState(0)
+useEffect(() => {
+  async function rt() {
+  
+    const resp=await single(`GetCart${userCred.id}`,token);
+   setcartNum(resp?.result.length);
+
+   
+  } 
+rt()
+}, [token])
+
   return (
 <div className="navbar bg-indigo-800">
   <div className="flex-none">
-    <a className="btn btn-ghost text-xl">Still Searching</a>
+    <Link className="btn btn-ghost text-xl" href="/">Still Searching</Link>
   </div>
   
   <div className="flex-1 mx-4">
@@ -38,9 +54,10 @@ const Logout=async()=>{
       <input type="text" placeholder="Search" className="input input-bordered w-full text-center" />
     </div>
   </div>
-
+  <Link href="../Products/Cart"> <Image src='/cart.png'alt="A description of the image"width={50} height={30}/></Link>
+<sup className='text-teal-50'>{cartNum}</sup>
   <div className="flex-none gap-2">
-    {token !== null ? (
+    {isAuthenticated? (
       <div className="dropdown dropdown-end">
         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
           <div className="w-10 rounded-full">
@@ -54,21 +71,24 @@ const Logout=async()=>{
           tabIndex={0}
           className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
           <li>
-            <Link href="/user/profile" className="justify-between">
+            <Link href="/user/Profile" className="justify-between">
               Profile
               <span className="badge">New</span>
             </Link>
           </li>
           <li>
-            <Link href="/user/profile/settings" className="justify-between">Settings</Link>
+            <Link href="/user/Profile/Settings" className="justify-between">Settings</Link>
           </li>
-          <li onClick={Logout}>
+
+          {!isLoaded?(<li onClick={Logout}>
             <a>Logout</a>
-          </li>
+          </li>):(<ButtonLoaders ty={'logout'} />)}
+
+          
         </ul>
       </div>
     ) : (
-      <Link className="btn btn-active btn-primary" href="/auth/login">
+      <Link className="btn btn-active btn-primary" href="/auth/Login">
         Login
       </Link>
     )}

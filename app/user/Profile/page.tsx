@@ -2,19 +2,17 @@
 import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation';
-export default function Profile() {
-  const router= useRouter()
-  useEffect(() => {
- 
-    const token=localStorage.getItem("Token")!;
+import { useAuth } from '@/app/context/AuthContext';
 
-    if (token == null) {
-      router.push("http://localhost:3000/auth/Login")
-    }
-  
-    
-  }, [])
-  
+
+export default function Profile() {
+ const router=useRouter()
+const {token,userCred}=useAuth()
+console.log(userCred)
+if (!token) {
+    router.push("http://localhost:3000/auth/Login")
+}
+
 
   return (
     <div className="container mx-auto p-5">

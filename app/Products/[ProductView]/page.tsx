@@ -1,39 +1,74 @@
 'use client'
 import React, { useEffect,useState} from 'react'
-import { cat, single } from '../../actions/Product';
-import { useRouter } from 'next/navigation';
+import { AddProductFunc, catRelated, singleIndex } from '../../actions/Product';
 
-export default function SHoW({params}) {
-    const token:string=localStorage.getItem('Token')!;
-    const router=useRouter()
+import Link from 'next/link';
+import {ProCard} from '@/app/component/Cards';
+import { SingleProduct } from '@/app/component/ContentLoader';
+import { useAuth } from '@/app/context/AuthContext';
+
+export default function SHOW({params}) {
+
+  const {token,userCred}=useAuth()
+   
+   const [isLoad, setisLoad] = useState(false);
+   const [Incart, setIncart] = useState('Add To Cart')
 
     const [data, setData] = useState({'id':'','name':"", 'price':1,'stock':1,'category':"",'tag':"", 'gender':"",'Description':"",});
-    
-    
-    const [id, setid] = useState()
+    const [Related, setRelated] = useState([{'id':'','name':"", 'price':1,'stock':1,'category':"",'tag':"", 'gender':"",'Description':"",}]);
+    const [chosenStock, setchosenStock] = useState('1');
+
     useEffect(() => {
 
 
         async function unwrapParams() {
+          setisLoad(true);
           const resolvedParams = await params;
 
-          setid(resolvedParams.ProductView);
+ 
     
-        const res=await single(`ViewProduct/${resolvedParams.ProductView}`,token);
+        const res=await singleIndex(`ViewProduct/${resolvedParams.ProductView}`);
     
-        setData(res?.result.data);
-    console.log(res?.result.data)
+        setData(res?.result.data[0]);
+        setisLoad(false);
     
-    const related=await cat(`getRelated/Top/${resolvedParams.ProductView}`, token);
-    console.log(related)
+if (res?.result.data[0].cart.length ==1) {
+  setIncart("In Cart")
+}
+
+    const related=await catRelated(`getRelated/Top/${resolvedParams.ProductView}`);
+
+    
+    setRelated(related?.result.data)
         }
     
         unwrapParams();
         
       }, []) 
+
+//handle Add To cart
+
+const AddToCart=async()=>{
+if (token) {
+  const prepData={
+    'user_id':userCred.id,
+    'stock':chosenStock,
+    'product_id':data.id
+  }
+  const resp=await AddProductFunc('AddCart',token,prepData);
+
+  if (resp?.result.message) {
+    setIncart('In Cart')
+  }
+}
+}
+
   return (
     <div className="container mx-auto py-10 px-4">
-    <div className="flex flex-col lg:flex-row gap-10">
+
+
+    {isLoad?(<SingleProduct/>):(
+      <div className="flex flex-col lg:flex-row gap-10">
       {/* Left Section: Image and Product Information */}
       <div className="lg:w-2/3 bg-white rounded-lg shadow-lg p-6">
         {/* Product Image */}
@@ -46,15 +81,13 @@ export default function SHoW({params}) {
         </div>
         {/* Product Information */}
         <div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">{data.name}</h2>
-          <p className="text-gray-600 text-lg mb-4">{data.Description}</p>
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">Name: {data.name}</h2>
+          <p className="text-gray-600 text-lg mb-4">Description: {data.Description}</p>
           <div className="flex items-center mb-4">
-            <span className="text-2xl font-semibold text-gray-800">{data.price}</span>
+            <span className="text-2xl font-semibold text-gray-800">Price: {data.price}</span>
           
           </div>
-          <p className="text-gray-600 mb-4">
-            
-          </p>
+          <p className="text-gray-600 mb-4"></p>
           <p className="text-gray-600 mb-4">
             Category: <span className="font-semibold">{data.category}</span>
           </p>
@@ -70,18 +103,26 @@ export default function SHoW({params}) {
               type="number"
               id="quantity"
               name="quantity"
-              defaultValue={1}
+              
               min={1}
               className="w-16 px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={chosenStock}
+              onChange={(e)=>{setchosenStock(e.target.value)}}
             />
           </div>
           {/* Action Buttons */}
           <div className="flex space-x-4">
+           
             <button className="flex-1 bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-200">
-              Add to Cart
+               {token?( 'Buy'):(
+                <Link href="/auth/Login">Buy</Link>
+               )}
+             
             </button>
-            <button className="flex-1 bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition duration-200">
-              Buy Now
+            <button className="flex-1 bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition duration-200"    onClick={AddToCart}>
+            {token?Incart:(
+                <Link href="/auth/Login">Add To Cart</Link>
+               )}
             </button>
           </div>
         </div>
@@ -128,45 +169,18 @@ export default function SHoW({params}) {
         </div>
       </div>
     </div>
+    )}
+
+
+
     {/* Related Products Section */}
     <div className="mt-12">
       <h3 className="text-2xl font-bold text-gray-800 mb-6">Related Products</h3>
-      <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {/* Related Product Card */}
-        <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-          <img
-            src="https://via.placeholder.com/300x200"
-            alt="Related Product Image"
-            className="w-full h-48 object-cover"
-          />
-          <div className="p-5">
-            <h4 className="font-semibold text-lg text-gray-800 mb-1">
-              Related Product 1
-            </h4>
-            <p className="text-gray-600 text-sm mb-2">$39.99</p>
-            <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200">
-              View Product
-            </button>
-          </div>
-        </div>
-        {/* Additional Related Products (Repeat or Dynamically Rendered) */}
-        <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-          <img
-            src="https://via.placeholder.com/300x200"
-            alt="Related Product Image"
-            className="w-full h-48 object-cover"
-          />
-          <div className="p-5">
-            <h4 className="font-semibold text-lg text-gray-800 mb-1">
-              Related Product 2
-            </h4>
-            <p className="text-gray-600 text-sm mb-2">$29.99</p>
-            <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200">
-              View Product
-            </button>
-          </div>
-        </div>
-      </div>
+  
+      
+    <ProCard Product={Related} ac={''} />
+    
+
     </div>
   </div>
   
