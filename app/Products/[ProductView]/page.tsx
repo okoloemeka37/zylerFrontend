@@ -7,9 +7,12 @@ import {ProCard} from '@/app/component/Cards';
 import { SingleProduct } from '@/app/component/ContentLoader';
 import { useAuth } from '@/app/context/AuthContext';
 
-export default function SHOW({params}) {
+import { useRouter } from 'next/navigation';
 
-  const {token,userCred}=useAuth()
+export default function SHOW({params}) {
+  const router=useRouter()
+
+  const {token,userCred,BASE_URL,User}=useAuth()
    
    const [isLoad, setisLoad] = useState(false);
    const [Incart, setIncart] = useState('Add To Cart')
@@ -58,7 +61,10 @@ if (token) {
   const resp=await AddProductFunc('AddCart',token,prepData);
 
   if (resp?.result.message) {
-    setIncart('In Cart')
+    setIncart('In Cart');
+    User(resp?.result.user)
+    router.push(BASE_URL+"/user/Profile");
+    
   }
 }
 }

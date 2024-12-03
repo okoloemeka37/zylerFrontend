@@ -1,142 +1,122 @@
-"use client"
-import React, { useEffect } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/app/context/AuthContext';
+'use client'
+
+import { useAuth } from "@/app/context/AuthContext";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 
-export default function Profile() {
- const router=useRouter()
-const {token,userCred}=useAuth()
-console.log(userCred)
-if (!token) {
-    router.push("http://localhost:3000/auth/Login")
-}
-
-
-  return (
-    <div className="container mx-auto p-5">
-    <header className="mb-6 bg-white p-4 rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold text-gray-800">Admin Dashboard</h2>
-    </header>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {/* Card for Total Products */}
-      <Link href="../user/Product">
-      <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
-    
-        <div className="mr-4 p-3 bg-blue-100 rounded-full">
-          <svg
-            className="h-10 w-10 text-blue-600"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16m-7 6h7"
-            />
-          </svg>
-        </div>
+export default function CustomerDashboard() {
+    const {userCred,token,BASE_URL}=useAuth();
      
-        <div>
-          <h3 className="text-xl font-bold text-gray-700">Total Products</h3>
-          <p className="text-gray-500">150</p>
-        </div>
+    const [user, setuser] = useState({'name':'','email':'','phone':'00000000000','address':''});
+    const [orders, setOrders] = useState([{'order_id':0,'status':'','total':0,'created_at':''}]);
+
+ 
+   useEffect(() => {
+    console.log(userCred['orders'])
+    setuser(userCred);
+    if (userCred['orders']==undefined) {
       
-      </div>
-        </Link>
-      {/* Card for Total Orders */}
-      <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
-      
-        <div className="mr-4 p-3 bg-green-100 rounded-full">
-          <svg
-            className="h-10 w-10 text-green-600"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 7h18M3 12h18m-7 5h7"
-            />
-          </svg>
-        </div>
-        
-        <div>
-        
-          <h3 className="text-xl font-bold text-gray-700">Total Orders</h3>
-          <p className="text-gray-500">75</p>
-          
-        </div>
-      </div>
-      {/* Card for Total Revenue */}
-      <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
-        <div className="mr-4 p-3 bg-yellow-100 rounded-full">
-          <svg
-            className="h-10 w-10 text-yellow-600"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 12h6m-3 0v6m0-6V6m6 6h-6m3 0V6m-6 0h6M3 12h18"
-            />
-          </svg>
-        </div>
-        <div>
-          <h3 className="text-xl font-bold text-gray-700">Total Revenue</h3>
-          <p className="text-gray-500">$3,500</p>
-        </div>
-      </div>
-      {/* Recent Orders */}
-      <div className="col-span-1 md:col-span-2 lg:col-span-3 bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-xl font-bold mb-4 text-gray-700">Recent Orders</h3>
-        <table className="min-w-full bg-white">
-          <thead>
-            <tr className="bg-gray-200 text-gray-700">
-              <th className="py-3 px-4 border-b">Order ID</th>
-              <th className="py-3 px-4 border-b">Customer</th>
-              <th className="py-3 px-4 border-b">Total</th>
-              <th className="py-3 px-4 border-b">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="hover:bg-gray-100">
-              <td className="py-3 px-4 border-b">#12345</td>
-              <td className="py-3 px-4 border-b">John Doe</td>
-              <td className="py-3 px-4 border-b">$100.00</td>
-              <td className="py-3 px-4 border-b">Shipped</td>
-            </tr>
-            <tr className="hover:bg-gray-100">
-              <td className="py-3 px-4 border-b">#12346</td>
-              <td className="py-3 px-4 border-b">Jane Smith</td>
-              <td className="py-3 px-4 border-b">$50.00</td>
-              <td className="py-3 px-4 border-b">Pending</td>
-            </tr>
-            <tr className="hover:bg-gray-100">
-              <td className="py-3 px-4 border-b">#12347</td>
-              <td className="py-3 px-4 border-b">Michael Lee</td>
-              <td className="py-3 px-4 border-b">$75.00</td>
-              <td className="py-3 px-4 border-b">Delivered</td>
-            </tr>
-            {/* More recent orders can be added here */}
-          </tbody>
-        </table>
-      </div>
+    }else{   setOrders(userCred['orders'])}
+ 
     
-    </div>
-  </div>
+   }, [userCred])
+   
   
+    return (
+      <div className="container mx-auto py-10 px-6">
+        <h1 className="text-3xl font-bold mb-6">Welcome, {user.name}!</h1>
   
-  )
-}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Personal Info */}
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold mb-4">Personal Information</h2>
+            <p className="text-gray-600">
+              <strong>Name:</strong> {user.name}
+            </p>
+            <p className="text-gray-600">
+              <strong>Email:</strong> {user.email}
+            </p>
+            <p className="text-gray-600">
+              <strong>Phone:</strong> {user.phone}
+            </p>
+            <p className="text-gray-600">
+              <strong>Address:</strong> {user.address}
+            </p>
+           <Link href={BASE_URL+"user/Profile/Settings/Edit"}> <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Edit Profile</button></Link>
+            
+            </div>
+  
+          {/* Recent Orders */}
+          <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold mb-4">Recent Orders</h2>
+            {orders.length > 0 ? (
+            
+              <div className="overflow-x-auto">
+                <table className="min-w-full table-auto">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="px-6 py-3 text-left">Order ID</th>
+                      <th className="px-6 py-3 text-left">Date</th>
+                      <th className="px-6 py-3 text-left">Total</th>
+                      <th className="px-6 py-3 text-left">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders.map((order) => (
+                      <tr key={order.order_id} className="border-b hover:bg-gray-50">
+                        <td className="px-6 py-3">{order.order_id}</td>
+                        <td className="px-6 py-3">{order.created_at}</td>
+                        <td className="px-6 py-3">{order.total}</td>
+                        <td className="px-6 py-3">
+                          <span
+                            className={`px-3 py-1 rounded-lg text-sm font-semibold ${
+                              order.status === "Delivered"
+                                ? "bg-green-200 text-green-800"
+                                : order.status === "In Progress"
+                                ? "bg-blue-200 text-blue-800"
+                                : "bg-yellow-200 text-yellow-800"
+                            }`}
+                          >
+                            {order.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+             
+            ) : (
+              <p className="text-gray-600">You have no recent orders.</p>
+            )}
+             <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+              View All Orders
+            </button>
+            
+          </div>
+        </div>
+  
+        {/* Wishlist and Settings */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          {/* Wishlist */}
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold mb-4">Wishlist</h2>
+            <p className="text-gray-600">Your favorite items will appear here.</p>
+            <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+              Browse Products
+            </button>
+          </div>
+  
+          {/* Account Settings */}
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold mb-4">Account Settings</h2>
+            <ul className="text-gray-600 space-y-2">
+              <li className="text-blue-700"><Link href={BASE_URL+"user/Profile/Settings/ChangePassword"}>Change Password</Link></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  

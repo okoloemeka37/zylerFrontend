@@ -16,7 +16,7 @@ interface Data{
 const cats:object={
   'Top':["T-Shirt","Shirts","Blouses","Sweaters","Hoodies"],
   'Bottom':["Jeans","Pants","Shorts","Skirts","Leggings"],
-  "Dresses":["Casual","Evening","Maxi","Mini","Midi"],
+  "Dress":["Casual","Evening","Maxi","Mini","Midi"],
   "BodyWears":["Jackets","Suits","Boxers","Panties","Bras","Cardigans"],
   "Footwear":["Sneakers","Sandals","Boots","Heels","Flats"],
   "Accessories":["Hats","Scarves","Belts","Bags","Jewelry"]
@@ -54,7 +54,7 @@ const [data, setData] = useState<Data>(  {
   'Description':"",
 });
 
-const Add =async (e)=>{
+const Add =async (e:React.FormEvent)=>{
   e.preventDefault();
 console.log(data.Description)
   const resp=await AddProductFunc(`AddProduct`,token,data);
@@ -142,21 +142,10 @@ console.log(data.Description)
             >
               Product Category
             </label>
-            <select
-              id="product-category"
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-           
+            <select  id="product-category"    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
            onChange={(e)=>{const val:string=e.target.value;settTS(cats[val])
-
             setData(prevData=>({
-              ...prevData,category:e.target.value
-            }))
-
-           }
-         
-          
-           }
-            >
+              ...prevData,category:e.target.value })) }  }  >
              <option value="">Select Category</option>
               <option  value="Top">Top</option>
               <option value="Bottom">Bottom</option>

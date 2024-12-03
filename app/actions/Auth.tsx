@@ -41,3 +41,27 @@ export  async function LogoutController(token:string) {
    
 }
 
+
+export  async function UpdateController(url:string,token:string,data:object) {
+ 
+  try {
+  const resp=await axios.put(`http://localhost:8000/api/${url}`,data,{
+   headers: {
+       Authorization: `Bearer ${token}`,
+     },
+ })
+ return {status:200,'result':resp};
+}
+ catch (error:any) {
+
+  if (error.status == 422) {
+   return {"status":422,'error':error.response.data.errors}
+  }
+  if (error.status == 404) {
+  return {status:error.status,'error':error.response.data}
+}
+
+}
+
+ 
+}

@@ -25,9 +25,7 @@ const [IsLoaded, setIsLoaded] = useState(false);
    }
 }, [token])
 
-const tol=data.reduce((acc,current)=>  acc +current.price,0);
 
-console.log((tol))
   return (
     <div className="container mx-auto py-10 px-4">
   {/* Page Header */}
@@ -67,42 +65,19 @@ console.log((tol))
     </div>
   </div>
   <div>
-    <p className="text-lg font-semibold text-gray-800">${item.price}</p>
+    <p className="text-lg font-semibold text-gray-800">#{item.price}</p>
   </div>
 </div>
    )):(<CartLoader/>)
   }
 
+<button className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg mt-6 hover:bg-blue-700 transition duration-200">
+     <Link href="CheckOut">Proceed to Checkout</Link>
+      </button>
 
       </div>
     </div>
-    {/* Order Summary */}
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-        Order Summary
-      </h2>
-      <div className="space-y-2">
-        <div className="flex justify-between">
-          <p className="text-gray-600">Subtotal</p>
-          <p className="text-gray-800 font-semibold">${tol}</p>
-        </div>
-        <div className="flex justify-between">
-          <p className="text-gray-600">Delivery</p>
-          <p className="text-gray-800 font-semibold">$10.00</p>
-        </div>
-        <div className="flex justify-between">
-          <p className="text-gray-600">Tax</p>
-          <p className="text-gray-800 font-semibold">$0.00</p>
-        </div>
-        <div className="flex justify-between border-t pt-4">
-          <p className="text-lg font-semibold text-gray-800">Total</p>
-          <p className="text-lg font-semibold text-gray-800">${tol+10+0}</p>
-        </div>
-      </div>
-      <button className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg mt-6 hover:bg-blue-700 transition duration-200">
-     <Link href="CheckOut">Proceed to Checkout</Link>
-      </button>
-    </div>
+ 
   </div>
 </div>
 

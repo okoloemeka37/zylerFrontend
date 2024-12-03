@@ -35,8 +35,9 @@ const [cartNum, setcartNum] = useState(0)
 useEffect(() => {
   async function rt() {
   
-    const resp=await single(`GetCart${userCred.id}`,token);
-   setcartNum(resp?.result.length);
+    const resp=userCred.carts;
+    
+   setcartNum(resp.length);
 
    
   } 
@@ -54,7 +55,7 @@ rt()
       <input type="text" placeholder="Search" className="input input-bordered w-full text-center" />
     </div>
   </div>
-  <Link href="../Products/Cart"> <Image src='/cart.png'alt="A description of the image"width={50} height={30}/></Link>
+  <Link href="http://localhost:3000/Products/Cart"> <Image src='/cart.png'alt="A description of the image"width={50} height={30}/></Link>
 <sup className='text-teal-50'>{cartNum}</sup>
   <div className="flex-none gap-2">
     {isAuthenticated? (
@@ -71,7 +72,7 @@ rt()
           tabIndex={0}
           className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
           <li>
-            <Link href="/user/Profile" className="justify-between">
+            <Link href={userCred['status'] !=='user'?("/user/Profile"):("/user/Profile")} className="justify-between">
               Profile
               <span className="badge">New</span>
             </Link>

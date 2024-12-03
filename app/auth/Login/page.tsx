@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import AuthController from '@/app/actions/Auth'
 import { useAuth } from '@/app/context/AuthContext'
 import Link from 'next/link'
-import { useRouter  } from 'next/navigation'
+
 import ButtonLoaders from '@/app/component/Loaders'
 
 
@@ -17,11 +17,7 @@ interface Ivalues {
 
 export default function Register() { 
    const {login,token}=useAuth();
-   const router=useRouter()
-  if (token) {
-      router.push("../../user/Profile")
-    }
-  
+
 
   const [isLoaded, setisLoaded] = useState(false)
 
@@ -35,7 +31,7 @@ const [errors, setErrors] = useState({
 });
 
 
-const submit=async (event:any)=>{
+const submit=async (event:React.FormEvent)=>{
 
 event.preventDefault();
 setisLoaded(true)
@@ -54,7 +50,7 @@ if (rest?.status ===200) {
 login(rest.result.data.token,rest.result.data.user);
  console.log(rest?.result.data);
  
-router.push("../../user/Profile")
+
 setisLoaded(false)
 }
 if (rest?.status ==422) {

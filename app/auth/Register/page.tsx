@@ -2,7 +2,7 @@
 
 import AuthController from '@/app/actions/Auth'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+
 import React, { useEffect, useState } from 'react'
 import ButtonLoaders from '@/app/component/Loaders'
 import { useAuth } from '@/app/context/AuthContext'
@@ -16,12 +16,8 @@ interface Ivalues {
 
 
 export default function Register() {
-  const {login,token}=useAuth();
-  const router=useRouter()
- if (token) {
-     router.push("../../user/Profile")
-   }
- 
+  const {login}=useAuth();
+
 
   const [isLoaded, setisLoaded] = useState(false)
 
@@ -53,7 +49,7 @@ console.log(rest)
 
 if (rest?.status ===200) {
   login(rest?.result.data.token,rest?.result.data.user)
-  router.push("../../product/ViewProduct")
+
   setisLoaded(false)
 }
 if (rest?.status ==422) {
