@@ -68,7 +68,7 @@ unwrapParams()
 const res= await EditProductFunc(`UpdateProduct/${resData.id}`,token,resData)
 console.log(res)
 if (res?.status===200) {
-  router.push("../../../user/Product")
+  router.push("../../../Admin/Product")
 } if (res?.status===422) {
   setErrors(res.error)
 }

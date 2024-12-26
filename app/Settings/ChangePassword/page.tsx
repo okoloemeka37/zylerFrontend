@@ -32,7 +32,7 @@ const [errors, setErrors] = useState({oldPassword: "", password: "",password_con
 
     const handleSubmit =async (e: React.FormEvent) => {
       e.preventDefault();
-    const resp=await UpdateController(`ChangePassword${id}`,token,data);
+    const resp=await UpdateController(`ChangePassword${id}`,data);
  
    if (resp?.status == 200) {    
     

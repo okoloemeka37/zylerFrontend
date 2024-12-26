@@ -6,32 +6,44 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import ButtonLoaders from '@/app/component/Loaders'
 import { useAuth } from '@/app/context/AuthContext'
+import { useRouter } from 'next/navigation'
 
 interface Ivalues {
   name:string,
   email:string,
   password:string
-  password_confirmation:string
+  password_confirmation:string,
+  address:string,
+  phone:string
 } 
 
 
 export default function Register() {
-  const {login}=useAuth();
+  const router=useRouter();
+  const {login,token,BASE_URL,userCred}=useAuth();
 
+  if (token) {
+    router.push(BASE_URL+userCred['status']+"/Profile")
+  }
 
+  
   const [isLoaded, setisLoaded] = useState(false)
 
   const [error, setErrors] = useState({
     'name':'',
     'email':'',
     'password':'',
-    "password_confirmation":''
+    "password_confirmation":'',
+    'phone':'',
+    'address':''
   })
 const [cred, setCred] = useState<Ivalues>({
   'name':'',
     'email':'',
     'password':'',
-    "password_confirmation":''
+    "password_confirmation":'',
+    'phone':'',
+    'address':''
 })
   
 
@@ -44,7 +56,7 @@ const [cred, setCred] = useState<Ivalues>({
         setisLoaded(true)
 
         const rest=await AuthController(cred,'register');
-console.log(rest)
+
 
 
 if (rest?.status ===200) {
@@ -85,7 +97,7 @@ if (rest?.status ==422) {
           }))
          }}
          />
-         <p>{error['name']}</p>
+         <p className='text-red-700'>{error['name']}</p>
        </div>
 
        <div className="mb-4">
@@ -104,7 +116,46 @@ if (rest?.status ==422) {
            })) 
            }}
            />
-            <p>{error['email']}</p>
+            <p className='text-red-700'>{error['email']}</p>
+       </div>
+       
+       
+       <div className="mb-4">
+         <label htmlFor="email" className="block text-gray-700">
+           House Address 
+         </label>
+         <input
+           type="address"
+           id="address"
+           name="address"
+           className="mt-1 block w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+           value={cred.address}
+           onChange={(e)=>{
+           setCred(prevCred=>({
+            ...prevCred,address:e.target.value
+           })) 
+           }}
+           />
+            <p className='text-red-700'>{error['address']}</p>
+       </div>
+       
+       <div className="mb-4">
+         <label htmlFor="phone" className="block text-gray-700">
+           Phone number
+         </label>
+         <input
+           type="phone"
+           id="phone"
+           name="phone"
+           className="mt-1 block w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+           value={cred.phone}
+           onChange={(e)=>{
+           setCred(prevCred=>({
+            ...prevCred,phone:e.target.value
+           })) 
+           }}
+           />
+            <p className='text-red-700'>{error['phone']}</p>
        </div>
        
        <div className="mb-4">
@@ -123,7 +174,7 @@ if (rest?.status ==422) {
            })) 
            }}
          />
-      <p>{error['password']}</p>
+      <p className='text-red-700'>{error['password']}</p>
        </div>
        <div className="mb-4">
          <label htmlFor="password" className="block text-gray-700">

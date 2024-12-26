@@ -1,0 +1,30 @@
+.Impl{
+   
+    height: 20vh;
+
+}
+.absZ{
+    position: absolute;
+    top: 50%;
+    z-index: 9999;
+}
+.zmend{
+    margin-left: 87%;
+}
+.lp{margin-left: 40em;}
+
+.absZ p:hover {
+    background-color: aliceblue;
+    border-radius: 50%;
+    padding: 5px;
+    cursor: pointer;
+}
+.tj{
+    border-radius: 50%;
+    width:70px;
+    height: 70px;
+
+}
+.gv{
+    margin-left: 47%;
+}

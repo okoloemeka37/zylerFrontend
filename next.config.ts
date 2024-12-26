@@ -3,7 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
 
   images: {
-    domains: ["encrypted-tbn0.gstatic.com","addict-clothes-store.com","via.placeholder.com","png.pngtree.com"], // Add the hostname here
+    domains: ["encrypted-tbn0.gstatic.com","addict-clothes-store.com","via.placeholder.com","png.pngtree.com",
+      '`https://github.com/okoloemeka37/ImageHolder/blob/main/uploads/'
+    ], // Add the hostname here
   },
 };
 
@@ -12,7 +14,7 @@ const nextConfig: NextConfig = {
 module.exports = {
   // Existing inertia or other configurations
   images: {
-    domains: ["encrypted-tbn0.gstatic.com","addict-clothes-store.com","via.placeholder.com",'png.pngtree.com'], // Add the hostname here
+    domains: ["encrypted-tbn0.gstatic.com","addict-clothes-store.com","via.placeholder.com",'png.pngtree.com','`https://github.com/okoloemeka37/ImageHolder/blob/main/uploads/'], // Add the hostname here
   },
   // Add any other configurations specific to inertia or your setup
 };

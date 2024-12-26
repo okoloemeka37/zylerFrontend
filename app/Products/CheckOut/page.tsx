@@ -1,20 +1,27 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
+
+
 import React, { useEffect,useRef,useState } from 'react'
+
+import { PaystackButton } from 'react-paystack'
 
 import { AddProductFunc, single } from '@/app/actions/Product'
 import  GetProduct  from '@/app/actions/Product'
 import { useAuth } from '@/app/context/AuthContext';
-
 import ButtonLoaders from '@/app/component/Loaders'
+
+
 import { useRouter } from 'next/navigation';
 
 export default function Checkout() {
   const router=useRouter()
 
+  
+
   const {token,userCred,BASE_URL,User}= useAuth()
   const [data, setData] = useState([{'id':'','name':"", 'price':1,'stock':1,'cart':[{'stock':1}],'category':"",'tag':"", 'gender':"",'Description':"",}]);
 const [state, setState] = useState([{'price':0,'days':0,'state':''}]);
+const [email, setemail] = useState('')
 const [price, setprice] = useState(0)
 const [days, setdays] = useState(0)
 const [total, setTotal] = useState(0)
@@ -28,6 +35,8 @@ const [OrderData, setOrderData] = useState({
   'stock':'',
   'SubTotal':0,
   'delivery':0,
+  'paymentRef':'0',
+  'StackPaymentId':'0'
 })
 
 const selectRef=useRef(null);
@@ -37,6 +46,7 @@ const selectRef=useRef(null);
  useEffect(() => {
   
    if (token!=='') {
+    setemail(userCred['email'])
     async function rt() {
       
       const resp=await single(`checkoutBill${userCred.id}`,token);
@@ -50,17 +60,17 @@ const selectRef=useRef(null);
      setData(resp?.result.cart);
 
 
-     const hol=[];
+     const hol:number []=[];
      resp?.result.cart.forEach(ele=>{
       ele.cart.forEach(ed=>{
         hol.push(ed.stock)
       })
      })
 
-  setOrderData(prev=>({
-      ...prev,stock:hol
-    })) 
-
+     setOrderData((prev) => ({
+      ...prev,
+      stock: hol,
+    }));
      
      const sData=await GetProduct('getState',token);
     
@@ -75,8 +85,8 @@ const selectRef=useRef(null);
    }
 }, [token])
 
-const selectId=(e)=>{
- const selectedOption=selectRef.current.selectedOptions[0];
+const selectId=(e: React.ChangeEvent<HTMLSelectElement>)=>{
+ const selectedOption=selectRef.current?.selectedOptions[0];
  setprice(selectedOption.getAttribute('data-price'))
  setdays(selectedOption.getAttribute("data-day"));
  
@@ -92,35 +102,54 @@ setOrderData(prev=>({
 }
 
 
+const publicKey = "pk_test_5ff3a56850dc08f3e340cd4c7c8060ba417c6fa5"
+  const amount = (total+Number(price))*100 // Remember, set in kobo!
+
+
+  const componentProps = {
+    email,
+    amount,
+   
+    publicKey,
+    text: "Buy",
+    onSuccess: async (ref) =>{
 
 
 
-const submitOrder=async()=>{
-const submit=await AddProductFunc('AddOrder',token,OrderData);
-console.log(submit)
-if(submit?.status==200){
-  setisLoaded(false)
+const submit = await AddProductFunc(`AddOrder/${ref.reference}/${ref.transaction}`, token, OrderData);
+console.log(submit);
+if (submit?.status === 200) {
+  setisLoaded(false);
   User(submit.result.user);
-router.push(BASE_URL+"user/Profile");
+  router.push(BASE_URL + "user/Profile");
+} else {
+  // Handle error case
+  console.error("Failed to submit order", submit);
+}
+   
+    },
+    onClose: () => alert("Wait! Don't leave :("),
+  }
 
-}
-}
+
+
+
 
 
 
 
   return (
     <div className="container mx-auto py-10 px-4">
-    {/* Page Header */}
+
     <div className="text-center mb-8">
       <h1 className="text-4xl font-bold text-gray-800">Checkout</h1>
       <p className="text-gray-600 mt-2">
         Complete your purchase and confirm your delivery details.
       </p>
     </div>
-    {/* Checkout Content */}
+   
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-      {/* Billing Information */}
+   
       <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6">
           Billing Information
@@ -142,6 +171,7 @@ router.push(BASE_URL+"user/Profile");
     id="email"
     name="email"
     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+   
     defaultValue={userCred['email']}
   />
 </div>
@@ -186,7 +216,7 @@ value={OrderData.state}
    }}
   />
 </div>
-          {/* Delivery Information */}
+
           <div className="mt-8">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">
               Delivery Information
@@ -223,7 +253,7 @@ value={OrderData.state}
         
         </form>
       </div>
-      {/* Order Summary */}
+
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6">
           Order Summary
@@ -247,12 +277,16 @@ value={OrderData.state}
             <p className="text-lg font-bold text-gray-800">#{total+Number(price)}</p>
           </div>
         </div>
-        <button className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg mt-6 hover:bg-blue-700 transition duration-200" onClick={submitOrder}>
-          Complete Purchase
-        </button>
+        {price===0||OrderData.address==''?'': !isLoaded? <PaystackButton className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg mt-6 hover:bg-blue-700 transition duration-200" {...componentProps} />:<ButtonLoaders ty={'Checkout'} />}
+          
+
       </div>
     </div>
   </div>
   
   )
 }
+ 
+
+
+

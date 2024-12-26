@@ -67,7 +67,7 @@ export default function Products() {
 <header className="flex justify-between items-center mb-6 bg-white p-4 rounded-lg shadow-md">
       <h2 className="text-2xl font-semibold text-gray-800">Product By Category</h2>
       <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200">
-        <Link href="/user/Product/AddProduct">
+        <Link href="/Admin/Product/AddProduct">
         Add New Product
         </Link>
       </button>

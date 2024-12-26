@@ -2,13 +2,17 @@
 
 import GetProduct, { DeleteProduct } from '@/app/actions/Product';
 import { Products } from '@/app/component/ContentLoader';
+import { useAuth } from '@/app/context/AuthContext';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation';
+import { HiTrash } from "react-icons/hi";
 import React, { useEffect, useState } from 'react';
 
 export default function ProductsList({params}) {
-const router=useRouter()
+const router=useRouter();
+const {BASE_URL}=useAuth()
 
+ 
   const token:string=localStorage.getItem('Token')!;
   const [isload, setisload] = useState(false)
 
@@ -23,6 +27,7 @@ const router=useRouter()
       'tag':"",
       'gender':"",
       'Description':"",
+      'image':''
     
   }]);
   const [title, setTitle] = useState()
@@ -53,7 +58,7 @@ console.log()
   const res= await DeleteProduct(`DeleteProduct/${id}`,token);
 
   if (res?.status===200) {
-    router.push("../../../user/Product")
+    router.push("../../../Admin/Product")
   }
   }
 
@@ -77,11 +82,15 @@ console.log()
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
    { !isload?  data.length !== 0?
 
-      data.map((rel,index)=>(    
+      data.map((rel,index)=>{
+        const images=rel.image;
+        const image=images.split(',');
+        return(    
       
          <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300" key={index}>
+          <Link href={BASE_URL+'/Products/'+rel.id}>
         <img
-          src={`https://picsum.photos/id/1005/400/200`}
+          src={`https:\/\/raw.githubusercontent.com\/okoloemeka37\/ImageHolder\/main\/uploads\/${image[0]}`}
           alt="T-Shirt"
           className="w-full h-40 object-cover"
         />
@@ -101,9 +110,10 @@ console.log()
             </button>
           </div>
         </div>
-      </div>)):(<h1>No Product Available For This Tag</h1> ):(
-        <Products/>
-      )}
+        </Link>
+      </div>)}):(<h1>No Product Available For This Tag</h1> ):(<Products/>)
+      
+      }
    
   
     

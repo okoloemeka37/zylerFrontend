@@ -110,16 +110,7 @@ setorder(resp?.result);
         </table>
       </div>
 
-      {/* Pagination */}
-      <div className="flex justify-between items-center mt-6">
-        <button className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
-          Previous
-        </button>
-        <div className="text-gray-600">Page 1 of 5</div>
-        <button className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
-          Next
-        </button>
-      </div>
+      
     </div>
   );
 }

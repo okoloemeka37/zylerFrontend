@@ -5,7 +5,7 @@ import { useAuth } from '@/app/context/AuthContext'
 import Link from 'next/link'
 
 import ButtonLoaders from '@/app/component/Loaders'
-
+import { useRouter } from 'next/navigation'
 
 
 interface Ivalues {
@@ -15,9 +15,13 @@ interface Ivalues {
 //401;
 
 
-export default function Register() { 
-   const {login,token}=useAuth();
-
+export default function Login() { 
+  const router=useRouter();
+   const {login,token,BASE_URL,userCred}=useAuth();
+if (token) {
+  
+  router.push(BASE_URL+userCred['status']+"/Profile")
+}
 
   const [isLoaded, setisLoaded] = useState(false)
 
@@ -111,15 +115,10 @@ onChange={(e)=>setEmail(e.target.value)}
          <p>{errors.password}</p>
       </div>
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center">
-          <input type="checkbox" id="remember" name="remember" className="mr-2" />
-          <label htmlFor="remember" className="text-gray-700">
-            Remember me
-          </label>
-        </div>
-        <a href="#" className="text-blue-500 hover:text-blue-700 text-sm">
+      
+        <Link href="ForgotPassword" className="text-blue-500 hover:text-blue-700 text-sm">
           Forgot password?
-        </a>
+        </Link>
       </div>{!isLoaded?( <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none w-full">
         Login
       </button>):(<ButtonLoaders ty={'login'} />)}

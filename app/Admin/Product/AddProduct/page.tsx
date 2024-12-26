@@ -2,6 +2,8 @@
 import { AddProductFunc } from "@/app/actions/Product"
 import {useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
+import "../../../../styles/body.css"
+import { HiTrash } from "react-icons/hi";
 
 interface Data{
   'name':string,
@@ -11,6 +13,7 @@ interface Data{
   'tag':string,
   'gender':string,
   'Description':string,
+
 }
 
 const cats:object={
@@ -21,8 +24,20 @@ const cats:object={
   "Footwear":["Sneakers","Sandals","Boots","Heels","Flats"],
   "Accessories":["Hats","Scarves","Belts","Bags","Jewelry"]
 }
-
+const removed: number[] = [];
 export default function AddProduct() {
+
+
+  const [selectedFiles, setFiles] = useState<string[]>([]);
+
+  const remove = (index: number) => {
+    const newFiles = selectedFiles.filter((_, i) => i !== index);
+    setFiles(newFiles);
+    removed.push(index);
+  };
+
+
+
 const router=useRouter();
 
      const [token, settoken] = useState('');
@@ -41,7 +56,8 @@ const [Errors, setErrors] = useState({
  "name":'' ,
 'tag':'',
 'price':'',
-'stock':''
+'stock':'',
+'image':''
 })
 
 const [data, setData] = useState<Data>(  {
@@ -52,32 +68,90 @@ const [data, setData] = useState<Data>(  {
   'tag':"",
   'gender':"",
   'Description':"",
+  
 });
+const [image, setimage] = useState<File[]>([]);
 
+const formData=new FormData()
 const Add =async (e:React.FormEvent)=>{
   e.preventDefault();
-console.log(data.Description)
-  const resp=await AddProductFunc(`AddProduct`,token,data);
-  
-  if (resp?.status===200) {
-    router.push("../../../user/Product")
+console.log(data)
+formData.append('name',data['name']);
+formData.append('price',data['price']);
+formData.append('stock',data['stock']);
+formData.append('category',data['category']);
+formData.append('tag',data['tag']);
+formData.append('gender',data['gender']);
+formData.append('Description',data['Description']);
+
+if(image){
+  for (let index = 0; index < image.length; index++) {
+    if (removed.length === 0) {
+      formData.append("images[]", image[index]);
+      console.log("mio",formData)
+    } else {
+      for (let i = 0; i < removed.length; i++) {
+        if (index === removed[i]) {
+          continue;
+        } else {
+          formData.append("images[]", image[index]);
+          console.log("pol")
+        }
+      }
+    }
   }
-  if (resp?.status===422) {
-    setErrors(resp.error)
-  }
+  console.log(image)
 }
+
+
+   const resp=await AddProductFunc(`AddProduct`,token,formData);
+  
+   if (resp?.status===200) {
+   router.push("../../../Admin/Product")
+     console.log(resp.result);
+   }
+   if (resp?.status===422) {
+     setErrors(resp.error)
+   }
+}
+
+
+//imageUp
+
+
+const change = (e: React.ChangeEvent<HTMLInputElement>) => {
+  setFiles([]);
+  if (e.target.files) {
+    const fileArray = Array.from(e.target.files).map((file) =>URL.createObjectURL(file) );
+    setFiles((prev) => prev.concat(fileArray));
+    Array.from(e.target.files).forEach((file) => URL.revokeObjectURL(file));
+    setimage(Array.from(e.target.files));
+    console.log(image)
+  }
+};
+
+const render = (source: string[]) => {
+  return source.map((photo, ind) => (
+    <div key={ind} className="ml-5">
+      <p onClick={() => remove(ind)}>  <HiTrash size={20} /> Remove</p>
+      <img src={photo} alt="" width={300} className="Impl" />
+    </div>
+  ));
+};
 
   return (
     <div className="container mx-auto p-5">
     <header className="mb-6 bg-white p-4 rounded-lg shadow-md">
       <h2 className="text-2xl font-semibold text-gray-800">Upload New Product</h2>
     </header>
-    <form className="bg-white p-6 rounded-lg shadow-md space-y-6" onSubmit={Add}>
+
+    <form className="bg-white p-6 rounded-lg shadow-md space-y-6" onSubmit={Add} encType="multipart/form-data">
       {/* Product Information */}
       <div>
         <h3 className="text-xl font-bold text-gray-700 mb-4">
           Product Information
         </h3>
+        <div className="result flex">{render(selectedFiles)}</div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="product-name" className="block text-gray-600 mb-2">
@@ -98,6 +172,10 @@ console.log(data.Description)
         />
         <p className="text-red-600">{Errors.name}</p>
           </div>
+<div>
+          <input type="file" name="" multiple  id="file" onChange={change} />
+          <p className="text-red-600">{Errors.image}</p>
+</div>
           <div>
             <label htmlFor="product-price" className="block text-gray-600 mb-2">
               Product Price
@@ -233,19 +311,7 @@ console.log(data.Description)
         />
           <p className="text-red-600">{Errors.description}</p>
       </div>
-      {/* Image Upload */}
-      <div>
-        <label htmlFor="product-image" className="block text-gray-600 mb-2">
-          Upload Product Image
-        </label>
-        <input
-          type="file"
-          id="product-image"
-          accept="image/*"
-          className="w-full border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-       
-        />
-      </div>
+     
       <div className="flex justify-end">
         <button
           type="submit"

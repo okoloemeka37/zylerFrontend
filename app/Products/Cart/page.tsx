@@ -1,17 +1,23 @@
 'use client'
 import React, { useEffect,useState } from 'react'
 
-import { single } from '@/app/actions/Product';
+import { DeleteProduct, single } from '@/app/actions/Product';
 import { useAuth } from '@/app/context/AuthContext';
+import { HiTrash } from "react-icons/hi";
 import Link from 'next/link';
 import { CartLoader } from '@/app/component/ContentLoader';
+import { useRouter } from 'next/navigation';
 export default function Cart() {
- const {token,userCred}= useAuth()
- const [data, setData] = useState([{'id':'','name':"", 'price':1,'stock':1,'cart':[{'stock':1}],'category':"",'tag':"", 'gender':"",'Description':"",}]);
+ const router= useRouter()
+ const {token,userCred,User}= useAuth()
+ const [data, setData] = useState([{'id':'','name':"", 'price':1,'stock':1,'cart':[{'stock':1}],'category':"",'tag':"", 'gender':"",'Description':"",'image':''}]);
 const [IsLoaded, setIsLoaded] = useState(false);
 
  useEffect(() => {
-  
+  if (!token) {
+    router.push("http://localhost:3000/auth/Login")
+}
+
    if (token!=='') {
     async function rt() {
       setIsLoaded(true)
@@ -25,6 +31,20 @@ const [IsLoaded, setIsLoaded] = useState(false);
    }
 }, [token])
 
+
+//remove from cart
+
+const delCart=async (id:number,ind:number)=>{
+  setIsLoaded(true)
+const resp=await DeleteProduct(`delCart/${id}`,token);
+console.log(resp.result.cart);
+
+ 
+  User(resp.result.user);
+  setData(resp.result.cart);
+setIsLoaded(false);
+
+}
 
   return (
     <div className="container mx-auto py-10 px-4">
@@ -49,22 +69,22 @@ const [IsLoaded, setIsLoaded] = useState(false);
   (
   <div className="flex items-center justify-between border-b pb-4" key={index}>
   <div className="flex items-center">
-    <img
-      src="https://via.placeholder.com/100x100"
-      alt="Product Image"
-      className="w-20 h-20 object-cover rounded-lg mr-4"
-    />
+    <img src={``+item.image}alt="Product Image" className="w-20 h-20 object-cover rounded-lg mr-4"  />
     <div>
       <h3 className="text-lg font-semibold text-gray-800">
         {item.name}
       </h3>
       <p className="text-gray-600">Category: {item.category}</p>
       <p className="text-gray-600">
-        Quantity: <span className="font-semibold">{item.cart[0].stock}</span>
+        Quantity: <span className="font-semibold">{item.cart != undefined? item.cart[0].stock:''}</span>
       </p>
     </div>
   </div>
   <div>
+  <button className="flex items-center space-x-2 text-red-600 hover:text-red-800" onClick={()=>delCart(item.id,index)}>
+      <HiTrash size={20} />
+      <span>Delete</span>
+    </button>
     <p className="text-lg font-semibold text-gray-800">#{item.price}</p>
   </div>
 </div>

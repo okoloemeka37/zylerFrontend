@@ -1,5 +1,7 @@
 'use client'
 
+import { single } from "@/app/actions/Product";
+import { WishCard } from "@/app/component/Cards";
 import { useAuth } from "@/app/context/AuthContext";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -11,6 +13,8 @@ export default function CustomerDashboard() {
     const [user, setuser] = useState({'name':'','email':'','phone':'00000000000','address':''});
     const [orders, setOrders] = useState([{'order_id':0,'status':'','total':0,'created_at':''}]);
 
+    const [wish, setwish] = useState([]);
+
  
    useEffect(() => {
     console.log(userCred['orders'])
@@ -19,8 +23,17 @@ export default function CustomerDashboard() {
       
     }else{   setOrders(userCred['orders'])}
  
-    
-   }, [userCred])
+
+    //get wishlist
+
+    const getWish=async ()=>{
+const resp=await single(`getWish${userCred.id}`,token);
+setwish(resp?.result.data);
+console.log(resp?.result);
+    }
+
+    getWish();
+   }, [userCred,token])
    
   
     return (
@@ -43,7 +56,7 @@ export default function CustomerDashboard() {
             <p className="text-gray-600">
               <strong>Address:</strong> {user.address}
             </p>
-           <Link href={BASE_URL+"user/Profile/Settings/Edit"}> <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Edit Profile</button></Link>
+           <Link href={BASE_URL+"Settings/Edit"}> <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Edit Profile</button></Link>
             
             </div>
   
@@ -98,21 +111,23 @@ export default function CustomerDashboard() {
         </div>
   
         {/* Wishlist and Settings */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+
           {/* Wishlist */}
+          
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-2xl font-semibold mb-4">Wishlist</h2>
-            <p className="text-gray-600">Your favorite items will appear here.</p>
-            <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-              Browse Products
-            </button>
-          </div>
-  
+            {wish.length===0?(        
+          
+          <p className="text-gray-600">Your favorite items will appear here.</p>):(
+            <WishCard Product={wish}  />
+          )} 
+            
+          
           {/* Account Settings */}
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-2xl font-semibold mb-4">Account Settings</h2>
             <ul className="text-gray-600 space-y-2">
-              <li className="text-blue-700"><Link href={BASE_URL+"user/Profile/Settings/ChangePassword"}>Change Password</Link></li>
+              <li className="text-blue-700"><Link href={BASE_URL+"Settings/ChangePassword"}>Change Password</Link></li>
             </ul>
           </div>
         </div>

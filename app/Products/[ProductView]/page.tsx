@@ -1,13 +1,14 @@
 'use client'
 import React, { useEffect,useState} from 'react'
 import { AddProductFunc, catRelated, singleIndex } from '../../actions/Product';
-
+import "../../../styles/body.css"
 import Link from 'next/link';
 import {ProCard} from '@/app/component/Cards';
 import { SingleProduct } from '@/app/component/ContentLoader';
 import { useAuth } from '@/app/context/AuthContext';
 
 import { useRouter } from 'next/navigation';
+import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 
 export default function SHOW({params}) {
   const router=useRouter()
@@ -17,9 +18,12 @@ export default function SHOW({params}) {
    const [isLoad, setisLoad] = useState(false);
    const [Incart, setIncart] = useState('Add To Cart')
 
-    const [data, setData] = useState({'id':'','name':"", 'price':1,'stock':1,'category':"",'tag':"", 'gender':"",'Description':"",});
+    const [data, setData] = useState({'id':'','name':"", 'price':1,'stock':1,'image':'','category':"",'tag':"", 'gender':"",'Description':"",});
     const [Related, setRelated] = useState([{'id':'','name':"", 'price':1,'stock':1,'category':"",'tag':"", 'gender':"",'Description':"",}]);
     const [chosenStock, setchosenStock] = useState('1');
+const [image, setImage] = useState<string[]>([]);
+
+const [count, setCount] = useState(0);
 
     useEffect(() => {
 
@@ -42,9 +46,14 @@ if (res?.result.data[0].cart.length ==1) {
     const related=await catRelated(`getRelated/Top/${resolvedParams.ProductView}`);
 
     
-    setRelated(related?.result.data)
+    setRelated(related?.result.data);
+    if(!isLoad){
+          const images=res?.result.data[0].image;
+          setImage(images.split(','));
+          console.log(image)
+          }
         }
-    
+        
         unwrapParams();
         
       }, []) 
@@ -63,27 +72,71 @@ if (token) {
   if (resp?.result.message) {
     setIncart('In Cart');
     User(resp?.result.user)
-    router.push(BASE_URL+"/user/Profile");
+    router.push(BASE_URL+"Products/Cart");
     
   }
 }
 }
 
+// add item to viewed item after 2 mins of staying
+
+useEffect(() => {
+  if (data.id !== '') {
+    setTimeout(() => {
+      
+   async function wish (){
+      const sending={
+        'user_id':userCred.id,
+        'product_id':data.id
+      }
+const resp=await AddProductFunc('addWish',token,sending)
+console.log(resp);
+
+
+    }
+wish();
+    }, 10000);
+    
+  }
+}, [data]);
+const handleIncrement = () => {
+  
+  setCount((prevCount) => prevCount + 1);
+  console.log(count+"re")
+if((image.length-1)==count){
+    setCount(0);
+    console.log(count+"df")
+  }
+};
+
+const handleDecrement = () => {
+  if(count===0){
+    setCount(image.length-1)
+  }
+  setCount((prevCount) => prevCount - 1);
+ 
+};
+
   return (
     <div className="container mx-auto py-10 px-4">
 
 
-    {isLoad?(<SingleProduct/>):(
+    {isLoad?(<SingleProduct/>):
+    
+    (
       <div className="flex flex-col lg:flex-row gap-10">
       {/* Left Section: Image and Product Information */}
       <div className="lg:w-2/3 bg-white rounded-lg shadow-lg p-6">
         {/* Product Image */}
+        <div className='flex absZ w-3/6 justify-between' ><p onClick={handleDecrement}><HiChevronLeft size={50} /></p> <p className='lp' onClick={handleIncrement}><HiChevronRight size={50} /></p></div>
         <div className="mb-6">
+            
           <img
-            src="https://images.unsplash.com/photo-1485736231968-0c8ad5c9e174?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c2hvZXxlbnwwfHwwfHx8MA%3D%3D"
+            src={`https:\/\/raw.githubusercontent.com\/okoloemeka37\/ImageHolder\/main\/uploads\/${image[count]}`}
             alt="Product Image"
             className="w-full h-auto object-cover rounded-lg"
           />
+        
         </div>
         {/* Product Information */}
         <div>
