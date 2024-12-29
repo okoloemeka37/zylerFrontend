@@ -7,7 +7,8 @@ const nextConfig: import('next').NextConfig = {
       "via.placeholder.com",
       "png.pngtree.com",
       "raw.githubusercontent.com",
-      'images.unsplash.com'
+      'images.unsplash.com',
+      'data:image'
     ],
   },
 };
