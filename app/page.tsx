@@ -33,7 +33,7 @@ export default function Home() {
 
 <div className="min-h-screen bg-gray-50 py-12 px-6">
 <section className="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white h-screen flex items-center">
-  <div className="absolute inset-0 bg-black opacity-50"></div>
+    <div className="absolute inset-0 bg-black opacity-50"></div>
   <div className="container mx-auto text-center relative z-10 px-4">
     <h1 className="text-5xl font-extrabold leading-tight mb-6 sm:text-6xl lg:text-7xl">
       Discover Your Perfect Look
