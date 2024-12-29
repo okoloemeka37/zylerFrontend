@@ -6,25 +6,26 @@ import ButtonLoaders from '@/app/component/Loaders'
 import Tops from "@/app/component/Tops";
 import { useRouter } from "next/navigation";
 import "../../../styles/body.css"
-
+import Image from 'next/image';
 
 export default function EditProfilePage() {
 
     const router=useRouter();
     const {userCred,token,BASE_URL,User}=useAuth();
-    const [data, setdata] = useState({id:0,name: "", email: "",phone: "",address: ""});
+    const [data, setdata] = useState( {name: '', email: '', status: '', id: '', carts: [], orders: [], phone: '', address: '',image:''});
     const [Preview, setPreview] = useState<string>()
-    const [Image, setImage] = useState<File|null>(null)
+    const [selectedImage, setSelectedImage] = useState<File|null>(null)
 
     const [mes, setmes] = useState('')
 
       const [isLoaded, setisLoaded] = useState(false)
 
-      const [errors, setErrors] = useState({name: "", email: "",phone: "",address: "",image:''});
+      const [errors, setErrors] = useState( {name: '', email: '', status: '', id: '', carts: [], orders: [], phone: '', address: '',image:''});
 useEffect(() => {
-  
-setdata(userCred);
-setPreview(userCred.image);
+  if (userCred) {
+    setdata(userCred);
+    setPreview(`https:\/\/raw.githubusercontent.com\/okoloemeka37\/ImageHolder\/main\/uploads\/`+userCred!.image);
+  }
 }, [userCred])
 
 
@@ -40,18 +41,21 @@ setPreview(userCred.image);
 
   const handleSubmit =async (e:React.FormEvent) => {
     e.preventDefault();
-    if (!Image) {
-      alert("pleas choose an image");
-      return false;
-    }
+   
      const formdata=new FormData();
  
     formdata.append('name',data['name']);
     formdata.append('email',data['email']);
     formdata.append('phone',data['phone']);
     formdata.append('address',data['address']);
-    formdata.append('image',Image);
-      console.log(Image)
+    if (!selectedImage) {
+      formdata.append('image',data['image']);
+      console.log(data['image'])
+    }else{
+      formdata.append('image',selectedImage);
+      console.log(selectedImage)
+    }
+   
 setisLoaded(true)
 const resp=await  UpdateCont(`Update${data['id']}`,formdata,token)
 
@@ -62,9 +66,13 @@ if (resp?.status ===200) {
     
     setisLoaded(false)
     
-  setmes(resp?.result.data.message);
+  if (resp?.result) {
+    setmes(resp.result.data.message);
+  }
     setTimeout(() => {
-        User(resp?.result.data.user);
+        if (resp?.result) {
+          User(resp.result.data.user);
+        }
         router.push(BASE_URL+"user/Profile")
     }, 5000);  
     }
@@ -77,19 +85,26 @@ if (resp?.status ===200) {
 
 
   const change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files[0];
+    let url='';
+    const file = e.target.files ? e.target.files[0] : null;
     if (e.target.files && e.target.files[0])  {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(file);
-        const url=URL.createObjectURL(file);
+        setSelectedImage(file);
+        if (file) {
+           url = URL.createObjectURL(file);
+          setPreview(url);
+        }
         setPreview(url)
+        console.log(url)
        // const fileArray = Array.from(e.target.files[0]).map((file) =>URL.createObjectURL(file) );
        
 
       };
     
-      reader.readAsDataURL(file);
+      if (file) {
+        reader.readAsDataURL(file);
+      }
     }
   };
   
@@ -97,7 +112,7 @@ if (resp?.status ===200) {
     return (
      
         
-        <img src={ `https:\/\/raw.githubusercontent.com\/okoloemeka37\/ImageHolder\/main\/uploads\/`+source} alt=""  className="tj" />
+        <Image src={source} alt="" width={500} height={500} className="tj" />
     
     );
   };

@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react'
 
 
 
-const cats:object={
+const cats: { [key: string]: string[] } = {
   'Top':["T-shirts","Shirts","Blouses","Sweaters","Hoodies"],
   'Bottom':["Jeans","Pants","Shorts","Skirts","Leggings"],
   "Dresses":["Casual","Evening","Maxi","Mini","Midi"],
@@ -16,7 +16,14 @@ const cats:object={
   "Accessories":["Hats","Scarves","Belts","Bags","Jewelry"]
 }
 
-export default function EditProduct({params}) {
+interface Params {
+  ProductEdit: string;
+}
+interface PageProps {
+  params: Promise<Params>;
+}
+
+export default function EditProduct({params}: PageProps) {
 const router=useRouter()
   const [Errors, setErrors] = useState({
     "category":'',
@@ -40,7 +47,7 @@ const router=useRouter()
 'stock':''
   })
     const [title, setTitle] = useState<string>();
- const [tTS, settTS] = useState([])
+ const [tTS, settTS] = useState<string[]>([])
    const [token, settoken] = useState('')
 
 useEffect(() => {
@@ -61,7 +68,7 @@ unwrapParams()
 }, [params,title])
 
 
- const Edit=async (e)=>{
+ const Edit=async (e: React.FormEvent<HTMLFormElement>)=>{
   e.preventDefault()
 //used the AddProduct Function for this one only differrence is the url attached;
 
@@ -163,7 +170,7 @@ if (res?.status===200) {
               value={resData['category']}
 
               onChange={(e)=>{
-             const val:string=e.target.value;settTS(cats[val])
+             const val: string = e.target.value; settTS(cats[val] || [])
                setResData(prevresData=>({
                  ...prevresData, category:e.target.value
                }))

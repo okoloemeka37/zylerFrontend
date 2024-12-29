@@ -1,6 +1,7 @@
 "use client"
 import { AddProductFunc } from "@/app/actions/Product"
 import {useRouter } from "next/navigation";
+import Image from "next/image";
 import { useEffect, useState } from "react"
 import "../../../../styles/body.css"
 import { HiTrash } from "react-icons/hi";
@@ -16,7 +17,7 @@ interface Data{
 
 }
 
-const cats:object={
+const cats: { [key: string]: string[] } = {
   'Top':["T-Shirt","Shirts","Blouses","Sweaters","Hoodies"],
   'Bottom':["Jeans","Pants","Shorts","Skirts","Leggings"],
   "Dress":["Casual","Evening","Maxi","Mini","Midi"],
@@ -77,8 +78,8 @@ const Add =async (e:React.FormEvent)=>{
   e.preventDefault();
 console.log(data)
 formData.append('name',data['name']);
-formData.append('price',data['price']);
-formData.append('stock',data['stock']);
+formData.append('price', data['price'].toString());
+formData.append('stock',data['stock'].toString());
 formData.append('category',data['category']);
 formData.append('tag',data['tag']);
 formData.append('gender',data['gender']);
@@ -103,8 +104,10 @@ if(image){
   console.log(image)
 }
 
+const formDataObject: Record<string, unknown> = Object.fromEntries(formData.entries());
 
-   const resp=await AddProductFunc(`AddProduct`,token,formData);
+
+   const resp=await AddProductFunc(`AddProduct`,token,formDataObject);
   
    if (resp?.status===200) {
    router.push("../../../Admin/Product")
@@ -124,7 +127,8 @@ const change = (e: React.ChangeEvent<HTMLInputElement>) => {
   if (e.target.files) {
     const fileArray = Array.from(e.target.files).map((file) =>URL.createObjectURL(file) );
     setFiles((prev) => prev.concat(fileArray));
-    Array.from(e.target.files).forEach((file) => URL.revokeObjectURL(file));
+    setFiles((prev) => prev.concat(fileArray));
+    fileArray.forEach((fileUrl) => URL.revokeObjectURL(fileUrl));
     setimage(Array.from(e.target.files));
     console.log(image)
   }
@@ -134,7 +138,9 @@ const render = (source: string[]) => {
   return source.map((photo, ind) => (
     <div key={ind} className="ml-5">
       <p onClick={() => remove(ind)}>  <HiTrash size={20} /> Remove</p>
-      <img src={photo} alt="" width={300} className="Impl" />
+      <Image src={photo} alt="" width={300} height={300} className="Impl" />
+     
+
     </div>
   ));
 };
@@ -221,7 +227,7 @@ const render = (source: string[]) => {
               Product Category
             </label>
             <select  id="product-category"    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-           onChange={(e)=>{const val:string=e.target.value;settTS(cats[val])
+           onChange={(e)=>{const val:string=e.target.value;settTS(cats[val] || [])
             setData(prevData=>({
               ...prevData,category:e.target.value })) }  }  >
              <option value="">Select Category</option>

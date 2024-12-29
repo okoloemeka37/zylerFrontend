@@ -19,7 +19,7 @@ setnotifications(not?.result)
     
         ret()
      
-    }, [token])
+    }, [token,userCred])
     
   return (
     <div className="max-w-5xl mx-auto mt-10 bg-white rounded-lg shadow-lg overflow-hidden">
@@ -56,7 +56,7 @@ setnotifications(not?.result)
               <div>
                 <h3
                   className={`text-lg font-medium ${
-                    notification.read ? "text-gray-800" : "text-blue-600"
+                    notification.view ? "text-gray-800" : "text-blue-600"
                   }`}
                 >
                   {notification.type}

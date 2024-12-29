@@ -7,7 +7,7 @@ const ContactPage = () => {
       <div className="bg-indigo-600 py-16 text-center">
         <h1 className="text-4xl font-extrabold text-white">Contact Us</h1>
         <p className="mt-4 text-lg text-indigo-200">
-          We'd love to hear from you! Feel free to reach out to us with any questions.
+          We&apos;d love to hear from you! Feel free to reach out to us with any questions.
         </p>
       </div>
 
@@ -124,7 +124,7 @@ const ContactPage = () => {
                 </label>
                 <textarea
                   id="message"
-                  rows="4"
+                  rows={4}
                   placeholder="Write your message..."
                   className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   required

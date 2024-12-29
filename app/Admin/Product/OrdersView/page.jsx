@@ -11,10 +11,13 @@ export default function AdminOrdersPage() {
 
     const router=useRouter()
     const {token,userCred}=useAuth();
-    
-    if (!token) {
+    useEffect(() => {
+     if (!token) {
         router.push("http://localhost:3000/auth/Login")
     }
+    }, [token,router,userCred])
+    
+   
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -23,7 +26,6 @@ export default function AdminOrdersPage() {
 
  useEffect(() => {
    async function ordersAll() {
-    const ft=[];
     const resp=await cat('ordersAll',token);
  
 setorder(resp?.result);

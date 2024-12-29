@@ -3,7 +3,7 @@
 import AuthController from '@/app/actions/Auth'
 import Link from 'next/link'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import ButtonLoaders from '@/app/component/Loaders'
 import { useAuth } from '@/app/context/AuthContext'
 import { useRouter } from 'next/navigation'
@@ -23,7 +23,7 @@ export default function Register() {
   const {login,token,BASE_URL,userCred}=useAuth();
 
   if (token) {
-    router.push(BASE_URL+userCred['status']+"/Profile")
+    router.push(BASE_URL+userCred!.status+"/Profile")
   }
 
   
@@ -51,7 +51,7 @@ const [cred, setCred] = useState<Ivalues>({
  
 
 
-    const Register=async (event)=>{
+    const Register=async (event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault();
         setisLoaded(true)
 
@@ -60,7 +60,10 @@ const [cred, setCred] = useState<Ivalues>({
 
 
 if (rest?.status ===200) {
-  login(rest?.result.data.token,rest?.result.data.user)
+
+if (rest?.result) {
+  login(rest.result.data.token, rest.result.data.user);
+}
 
   setisLoaded(false)
 }

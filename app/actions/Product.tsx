@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 
 
@@ -58,7 +57,7 @@ export async function single(url:string,token:string) {
 
 //this is used as the addtocart function too and addproduct
 
-export async function AddProductFunc(url:string,token:string,data:object) {
+export async function AddProductFunc(url:string,token:string,data:Record<string, unknown>) {
     try {
   
         const resp=await axios.post(`https://zyler.cleverapps.io/api/${url}`,data,{
@@ -69,15 +68,17 @@ export async function AddProductFunc(url:string,token:string,data:object) {
         });
       return {status:200,'result':resp.data};
       
-      } catch (error:any) {
+      } catch (error: unknown) {
       
       
         console.log(error)
-        if (error.status == 422) {
-         return {"status":422,'error':error.response.data.errors}
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 422) {
+          return {status:422, 'error':error.response.data.errors};
         }
-        if (error.status ==401) {
-        return {status:401,'error':"Invalid Credentials"}
+        if (error.response?.status === 401) {
+          return {status:401, 'error':"Invalid Credentials"};
+        }
       }
       
       }
@@ -95,14 +96,14 @@ export async function EditProductFunc(url:string,token:string,data:object) {
       })!;
     return {status:200,'result':resp.data};
     
-    } catch (error:any) {
+    } catch (error: unknown) {
     
     
       console.log(error)
-      if (error.status == 422) {
+      if (axios.isAxiosError(error) && error.response?.status === 422) {
        return {"status":422,'error':error.response.data.errors}
       }
-      if (error.status ==401) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
       return {status:401,'error':"Invalid Credentials"}
     }
     
@@ -124,9 +125,9 @@ try {
       },
 });
 
-return {status:200,'result':resp.data};
+return {'status':200,'result':resp.data};
 
-} catch (error:any) {
+} catch (error:unknown) {
 
 
   return error

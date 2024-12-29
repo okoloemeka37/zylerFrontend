@@ -9,16 +9,16 @@ import { useAuth } from '@/app/context/AuthContext'
 
 export default function ChangePassword() {
     const router=useRouter();
-    const {token,BASE_URL,userCred}=useAuth();
+    const {BASE_URL,userCred}=useAuth();
 const [data, setdata] = useState({'oldPassword':'','password':'','password_confirmation':'',email:''})
-const [id, setid] = useState(0);
+const [id, setid] = useState('');
 
 
 useEffect(() => {
  setdata(prev=>({
-...prev,email:userCred.email
+...prev,email:userCred!.email.toString()
  }))
- setid(userCred.id)
+ setid(userCred!.email.toString())
 }, [userCred])
 
 
@@ -37,7 +37,7 @@ const [errors, setErrors] = useState({oldPassword: "", password: "",password_con
    if (resp?.status == 200) {    
     
     setisLoaded(false)
-    setmes(resp?.result.data.message);
+    setmes(resp?.result?.data.message || '');
 
     setTimeout(() => {
         router.push(BASE_URL+"user/Profile")

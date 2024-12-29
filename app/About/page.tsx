@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
+import Image from 'next/image';
 
 
 
@@ -62,9 +63,11 @@ const About = () => {
               key={index}
               className="bg-white shadow-lg rounded-lg p-6 text-center"
             >
-              <img
+              <Image
                 src={member.image}
                 alt={member.name}
+                width={96}
+                height={96}
                 className="w-24 h-24 rounded-full mx-auto mb-4"
               />
               <h3 className="text-lg font-semibold text-gray-800">

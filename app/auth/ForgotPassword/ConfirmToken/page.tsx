@@ -16,11 +16,14 @@ const TokenConfirmation = () => {
   const router=useRouter();
   const {token,BASE_URL,userCred}=useAuth();
 if (token) {
-
- router.push(BASE_URL+userCred['status']+"/Profile")
+ 
+    if (userCred && 'status' in userCred) {
+      router.push(BASE_URL + (userCred as { status: string }).status + "/Profile");
+    }
+ 
 }
 
-  const handleSubmit =async (e) => {
+  const handleSubmit =async (e: { preventDefault: () => void; }) => {
     setisLoaded(true);
     e.preventDefault();
     const send={
@@ -30,7 +33,9 @@ if (token) {
     const resp=await AuthController(send,'TokenConfirm');
     
     if (resp?.status ==200){
-      setEmail(resp?.result.data.data);
+      if (resp?.result) {
+        setEmail(resp.result.data.data);
+      }
       //console.log(resp?.result.data.data)
     }
     if (resp?.status ==422) {

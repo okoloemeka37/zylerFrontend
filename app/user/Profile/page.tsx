@@ -4,11 +4,20 @@ import { single } from "@/app/actions/Product";
 import { WishCard } from "@/app/component/Cards";
 import { useAuth } from "@/app/context/AuthContext";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react"
 
 
 export default function CustomerDashboard() {
+    const router=useRouter();
     const {userCred,token,BASE_URL}=useAuth();
+    
+    useEffect(() => {
+      if (!token) {
+        router.push("http://localhost:3000/auth/Login")
+    }
+    }, [token,router,userCred])
+    
      
     const [user, setuser] = useState({'name':'','email':'','phone':'00000000000','address':''});
     const [orders, setOrders] = useState([{'order_id':0,'status':'','total':0,'created_at':''}]);

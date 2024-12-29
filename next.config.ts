@@ -1,23 +1,16 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-
+/** @type {import('next').NextConfig} */
+const nextConfig: import('next').NextConfig = {
   images: {
-    domains: ["encrypted-tbn0.gstatic.com","addict-clothes-store.com","via.placeholder.com","png.pngtree.com",
-      '`https://github.com/okoloemeka37/ImageHolder/blob/main/uploads/'
-    ], // Add the hostname here
+    domains: [
+      "encrypted-tbn0.gstatic.com",
+      "addict-clothes-store.com",
+      "via.placeholder.com",
+      "png.pngtree.com",
+      "raw.githubusercontent.com",
+      'images.unsplash.com'
+    ],
   },
 };
 
-// next.config.js
-// next.config.js
-module.exports = {
-  // Existing inertia or other configurations
-  images: {
-    domains: ["encrypted-tbn0.gstatic.com","addict-clothes-store.com","via.placeholder.com",'png.pngtree.com','`https://github.com/okoloemeka37/ImageHolder/blob/main/uploads/'], // Add the hostname here
-  },
-  // Add any other configurations specific to inertia or your setup
-};
+module.exports = nextConfig;
 
-
-export default nextConfig;

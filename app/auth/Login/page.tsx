@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, {useState } from 'react'
 import AuthController from '@/app/actions/Auth'
 import { useAuth } from '@/app/context/AuthContext'
 import Link from 'next/link'
@@ -20,7 +20,7 @@ export default function Login() {
    const {login,token,BASE_URL,userCred}=useAuth();
 if (token) {
   
-  router.push(BASE_URL+userCred['status']+"/Profile")
+  router.push(BASE_URL+userCred!.status+"/Profile")
 }
 
   const [isLoaded, setisLoaded] = useState(false)
@@ -49,10 +49,10 @@ password:password
 const rest= await AuthController(data,'login')
   
 
-if (rest?.status ===200) {
+if (rest?.status === 200 && rest.result) {
 
-login(rest.result.data.token,rest.result.data.user);
- console.log(rest?.result.data);
+login(rest.result.data.token, rest.result.data.user);
+
  
 
 setisLoaded(false)
@@ -124,7 +124,7 @@ onChange={(e)=>setEmail(e.target.value)}
       </button>):(<ButtonLoaders ty={'login'} />)}
      
       <div className="mt-4 text-center">
-        <p className="text-gray-600 text-sm"> Don't  have an account? <Link href="/auth/Register">Sign up</Link> </p>
+        <p className="text-gray-600 text-sm"> Don&apos;t  have an account? <Link href="/auth/Register">Sign up</Link> </p>
       </div>
     </form>
     </div>

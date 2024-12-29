@@ -6,16 +6,16 @@ import { cat } from '@/app/actions/Product'
 import { AdmiTag } from '@/app/component/Cards'
 
 export default function Products() {
-  const Just=['Top','Bottom','Dress','BodyWears','Footwear','Accessories']
-  const [Top, setTop] = useState([{'tag':"", 'stockCount':''}]);
-  const [Bottom, setBottom] = useState([{'tag':"", 'stockCount':''}]);
-  const [Dress, setDress] = useState([{'tag':"", 'stockCount':''}]);
-  const [BodyWears, setBodyWears] = useState([{'tag':"", 'stockCount':''}]);
-  const [Footwear, setFootwear] = useState([{'tag':"", 'stockCount':''}]);
-  const [Accessories, setAccessories] = useState([{'tag':"", 'stockCount':''}]);
+  const [Top, setTop] = useState([{'tag':"", 'stockCount':0}]);
+  const [Bottom, setBottom] = useState([{'tag':"", 'stockCount':0}]);
+  const [Dress, setDress] = useState([{'tag':"", 'stockCount':0}]);
+  const [BodyWears, setBodyWears] = useState([{'tag':"", 'stockCount':0}]);
+  const [Footwear, setFootwear] = useState([{'tag':"", 'stockCount':0}]);
+  const [Accessories, setAccessories] = useState([{'tag':"", 'stockCount':0}]);
 
   useEffect(() => {
-   
+    const Just=['Top','Bottom','Dress','BodyWears','Footwear','Accessories']
+
    const gen= async () => {
     
     for (let i = 0; i < Just.length; i++) {
@@ -23,36 +23,39 @@ export default function Products() {
       
       const res= await cat(`setCat/${element}`,localStorage.getItem('Token')!);
 
-  
-  
+      const formattedProducts = res?.result.data.map((product: { tag: string; stockCount: string }) => ({
+        ...product,
+        stockCount: Number(product.stockCount)
+      }));
+
     switch (element) {
       case 'Bottom':
-        setBottom(res?.result.data)
+        setBottom(formattedProducts)
         break;
 
     case 'Dress':
-      setDress(res?.result.data)
+      setDress(formattedProducts)
       break;
 
       case 'BodyWears':
-        setBodyWears(res?.result.data)
+        setBodyWears(formattedProducts)
         break;
 
         case 'Footwear':
-          setFootwear(res?.result.data)
+          setFootwear(formattedProducts)
           break;
 
           case 'Accessories':
-            setAccessories(res?.result.data)
+            setAccessories(formattedProducts)
             break
 
 
       case 'Top':
-        setTop(res?.result.data);
+        setTop(formattedProducts);
         break;
     }
 
-    console.log(res?.result.data)
+    console.log(formattedProducts)
     }
 
     

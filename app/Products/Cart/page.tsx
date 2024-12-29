@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect,useState } from 'react'
-
+import Image from 'next/image';
 import { DeleteProduct, single } from '@/app/actions/Product';
 import { useAuth } from '@/app/context/AuthContext';
 import { HiTrash } from "react-icons/hi";
@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 export default function Cart() {
  const router= useRouter()
  const {token,userCred,User}= useAuth()
- const [data, setData] = useState([{'id':'','name':"", 'price':1,'stock':1,'cart':[{'stock':1}],'category':"",'tag':"", 'gender':"",'Description':"",'image':''}]);
+const [data, setData] = useState([{ id: '', name: '', price: 1, stock: 1, cart: [{ stock: 1 }], category: '', tag: '', gender: '', Description: '', image: '' }]);
 const [IsLoaded, setIsLoaded] = useState(false);
 
  useEffect(() => {
@@ -22,21 +22,22 @@ const [IsLoaded, setIsLoaded] = useState(false);
     async function rt() {
       setIsLoaded(true)
       
-      const resp=await single(`GetCart${userCred.id}`,token);
+      const resp=await single(`GetCart${userCred!.id}`,token);
      setData(resp?.result)
+     console.log(resp?.result.length)
       setIsLoaded(false)
     }
   rt()
   
    }
-}, [token])
+}, [router, userCred,token])
 
 
 //remove from cart
 
-const delCart=async (id:number,ind:number)=>{
+const delCart=async (id:number)=>{
   setIsLoaded(true)
-const resp=await DeleteProduct(`delCart/${id}`,token);
+const resp = await DeleteProduct(`delCart/${id}`, token) as { result: { cart: { id: string, name: string, price: number, stock: number, cart: { stock: number }[], category: string, tag: string, gender: string, Description: string, image: string }[], user:  { name: string; email: string; status: string; id: string; carts: []; orders: []; phone: string; address: string,image:string } } };
 console.log(resp.result.cart);
 
  
@@ -69,7 +70,7 @@ setIsLoaded(false);
   (
   <div className="flex items-center justify-between border-b pb-4" key={index}>
   <div className="flex items-center">
-    <img src={``+item.image}alt="Product Image" className="w-20 h-20 object-cover rounded-lg mr-4"  />
+    <Image src={`https://raw.githubusercontent.com/okoloemeka37/ImageHolder/main/uploads/`+item.image} alt="Product Image" width={80} height={80} className="w-20 h-20 object-cover rounded-lg mr-4"  />
     <div>
       <h3 className="text-lg font-semibold text-gray-800">
         {item.name}
@@ -81,7 +82,7 @@ setIsLoaded(false);
     </div>
   </div>
   <div>
-  <button className="flex items-center space-x-2 text-red-600 hover:text-red-800" onClick={()=>delCart(item.id,index)}>
+  <button className="flex items-center space-x-2 text-red-600 hover:text-red-800" onClick={()=>delCart(Number(item.id))}>
       <HiTrash size={20} />
       <span>Delete</span>
     </button>
@@ -90,9 +91,11 @@ setIsLoaded(false);
 </div>
    )):(<CartLoader/>)
   }
-
-<button className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg mt-6 hover:bg-blue-700 transition duration-200">
+{data.length==0?(<div className="text-center text-gray-600"><p>No item in cart</p></div>):(<button className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg mt-6 hover:bg-blue-700 transition duration-200">
      <Link href="CheckOut">Proceed to Checkout</Link>
+      </button>)}
+      <button className="w-full bg-indigo-500 text-white font-semibold py-3 rounded-lg mt-6 hover:bg-blue-700 transition duration-200">
+     <Link href="/">Continue Shopping </Link>
       </button>
 
       </div>

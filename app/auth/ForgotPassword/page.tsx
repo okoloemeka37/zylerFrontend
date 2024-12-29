@@ -1,6 +1,6 @@
 'use client'
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { useAuth } from '@/app/context/AuthContext'
 import { useRouter } from "next/navigation";
 import AuthController from "@/app/actions/Auth";
@@ -11,7 +11,7 @@ const ForgotPassword = () => {
   const {token,BASE_URL,userCred}=useAuth();
 if (token) {
 
- router.push(BASE_URL+userCred['status']+"/Profile")
+ router.push(BASE_URL+(userCred as { status: string }).status +"/Profile")
 }
 
 const [Errors, setErrors] = useState({'email':''});

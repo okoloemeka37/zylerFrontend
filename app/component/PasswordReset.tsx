@@ -4,7 +4,11 @@ import {UpdateController} from "@/app/actions/Auth";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 
-const PasswordReset = ({Email}) => {
+interface PasswordResetProps {
+  Email: string;
+}
+
+const PasswordReset: React.FC<PasswordResetProps> = ({ Email }) => {
   const router=useRouter()
   const {BASE_URL}=useAuth();
   const [password, setPassword] = useState("");
@@ -12,19 +16,22 @@ const PasswordReset = ({Email}) => {
   const [error, setError] = useState('');
   const [suc, setsuc] = useState('')
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (password.length ===0 || password !== confirmPassword) {
-      setError("Passwords Do not Match");
-    }else{
-    const data={password }
-    const resp=await UpdateController(`ChangePassword${Email}`,data);
-    console.log(resp?.result);
-    setsuc(resp?.result.data.message)
 
-    setTimeout(() => {
-      router.push(BASE_URL+"auth/Login")
-    }, 3000);
+  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (password.length === 0 || password !== confirmPassword) {
+      setError("Passwords Do not Match");
+    } else {
+      const data = { password };
+      const resp= await UpdateController(`ChangePassword${Email}`, data);
+      console.log(resp?.result);
+      if (resp && resp.result) {
+        setsuc(resp.result.data.message);
+      }
+
+      setTimeout(() => {
+        router.push(BASE_URL + "auth/Login");
+      }, 3000);
     }
   };
 

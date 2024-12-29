@@ -1,7 +1,15 @@
 'use client'
 import React from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
-export default function IndexProducts({Product}) {
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+}
+
+export default function IndexProducts({ Product }: { Product: Product }) {
   console.log(Product)
   const images=Product.image;
   const image=images.split(',');
@@ -11,8 +19,14 @@ export default function IndexProducts({Product}) {
     <Link href={'Products/'+Product.id}>
 {/* Product Image */}
 <div className="relative">
-<img  src={`https:\/\/raw.githubusercontent.com\/okoloemeka37\/ImageHolder\/main\/uploads\/${image[0]}`}
-alt="Product Image"className="w-full h-36 object-cover transition-transform duration-500 transform group-hover:scale-105"/>
+
+<Image 
+  src={`https://raw.githubusercontent.com/okoloemeka37/ImageHolder/main/uploads/${image[0]}`}
+  alt="Product Image"
+  width={240}
+  height={144}
+  className="w-full h-36 object-cover transition-transform duration-500 transform group-hover:scale-105"
+/>
   {/* Discount Badge */}
  {/*  <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
     20% OFF

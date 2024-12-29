@@ -20,7 +20,7 @@ console.log(not?.result);
     }
 
     ret()
-}, [token]);
+}, [token,userCred]);
 const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -59,7 +59,7 @@ const filteredUsers = users.filter((user) =>
                     key={user.id}
                     className="border-b hover:bg-gray-100 transition duration-300"
                   >
-                    <td className="px-6 py-3"><Link href="./User/Activities">{user.name}</Link></td>
+                    <td className="px-6 py-3"><Link href="">{user.name}</Link></td>
                     <td className="px-6 py-3">{user.email}</td>
                     <td className="px-6 py-3">{user.phone}</td>
                     <td className="px-6 py-3">
@@ -76,7 +76,7 @@ const filteredUsers = users.filter((user) =>
               ) : (
                 <tr>
                   <td
-                    colspan="5"
+                   
                     className="px-6 py-4 text-center text-gray-500"
                   >
                     No users found.

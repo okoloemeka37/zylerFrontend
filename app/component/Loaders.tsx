@@ -1,6 +1,10 @@
 import React from 'react'
 
-export default function ButtonLoaders({ty}) {
+interface ButtonLoadersProps {
+  ty: string;
+}
+
+export default function ButtonLoaders({ ty }: ButtonLoadersProps) {
   return (
     <button
 
