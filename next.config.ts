@@ -1,17 +1,45 @@
 /** @type {import('next').NextConfig} */
 const nextConfig: import('next').NextConfig = {
   images: {
-    domains: [
-      "encrypted-tbn0.gstatic.com",
-      "addict-clothes-store.com",
-      "via.placeholder.com",
-      "png.pngtree.com",
-      "raw.githubusercontent.com",
-      'images.unsplash.com',
-      'data:image'
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'encrypted-tbn0.gstatic.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'addict-clothes-store.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'png.pngtree.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'raw.githubusercontent.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };
 
-module.exports = nextConfig;
-
+export default nextConfig;

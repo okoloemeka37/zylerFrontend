@@ -50,7 +50,7 @@ export default function Checkout() {
   const [price, setPrice] = useState(0)
   const [days, setDays] = useState(0)
   const [total, setTotal] = useState(0)
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isLoaded, setIsLoaded] = useState<boolean>(true)
   const [OrderData, setOrderData] = useState<OrderDataType>({
     state: '',
     description: '',
@@ -129,9 +129,10 @@ export default function Checkout() {
     publicKey,
     text: "Buy",
     onSuccess: async (ref: { reference: string; transaction: string }) => {
+      setIsLoaded(false);
       const submit = await AddProductFunc(`AddOrder/${ref.reference}/${ref.transaction}`, token, { ...OrderData });
       if (submit?.status === 200) {
-        setIsLoaded(false);
+        setIsLoaded(true);
         User(submit.result.user);
         router.push(BASE_URL + "user/Profile");
       } else {
@@ -263,7 +264,7 @@ export default function Checkout() {
               <p className="text-lg font-bold text-gray-800">#{total + Number(price)}</p>
             </div>
           </div>
-          {price === 0 || OrderData.address === '' ? '' : !isLoaded ? <PaystackButton className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg mt-6 hover:bg-blue-700 transition duration-200" {...componentProps} /> : <ButtonLoaders ty={'Checkout'} />}
+          {price === 0 || OrderData.address === '' ? '' : isLoaded ? <PaystackButton className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg mt-6 hover:bg-blue-700 transition duration-200" {...componentProps} /> : <ButtonLoaders ty={'Checkout'} />}
         </div>
       </div>
     </div>

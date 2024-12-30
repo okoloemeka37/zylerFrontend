@@ -71,7 +71,7 @@ const [data, setData] = useState<Data>(  {
   'Description':"",
   
 });
-const [image, setimage] = useState<File[]>([]);
+const [image, setimage] = useState<string[]>([]);
 
 const formData=new FormData()
 const Add =async (e:React.FormEvent)=>{
@@ -125,11 +125,10 @@ const formDataObject: Record<string, unknown> = Object.fromEntries(formData.entr
 const change = (e: React.ChangeEvent<HTMLInputElement>) => {
   setFiles([]);
   if (e.target.files) {
-    const fileArray = Array.from(e.target.files).map((file) =>URL.createObjectURL(file) );
-    setFiles((prev) => prev.concat(fileArray));
-    setFiles((prev) => prev.concat(fileArray));
-    fileArray.forEach((fileUrl) => URL.revokeObjectURL(fileUrl));
-    setimage(Array.from(e.target.files));
+    const files = Array.from(e.target.files); 
+    const imageUrls = files.map((file) => URL.createObjectURL(file)); 
+    setimage(imageUrls); 
+
     console.log(image)
   }
 };
@@ -157,7 +156,7 @@ const render = (source: string[]) => {
         <h3 className="text-xl font-bold text-gray-700 mb-4">
           Product Information
         </h3>
-        <div className="result flex">{render(selectedFiles)}</div>
+        <div className="result flex">{render(image)}</div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="product-name" className="block text-gray-600 mb-2">
