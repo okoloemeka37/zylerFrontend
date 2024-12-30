@@ -126,9 +126,15 @@ export default function SHOW({ params }: PageProps) {
                 <p className="text-gray-600 mb-4">
                   Category: <span className="font-semibold">{data.category}</span>
                 </p>
+
                 <p className="text-gray-600 mb-4">
-                  Purchased by: <span className="font-semibold">150 people</span>
+                  Tag: <span className="font-semibold">{data.tag}</span>
                 </p>
+                <p className="text-gray-600 mb-4">
+                  Gender: <span className="font-semibold">{data.gender}</span>
+                </p>
+              
+              
                 <div className="flex items-center space-x-4 mb-6">
                   <label htmlFor="quantity" className="text-gray-600">
                     Quantity:
