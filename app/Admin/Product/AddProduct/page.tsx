@@ -71,7 +71,7 @@ const [data, setData] = useState<Data>(  {
   'Description':"",
   
 });
-const [image, setimage] = useState<string[]>([]);
+const [image, setimage] = useState<File[]>([]);
 
 const formData=new FormData()
 const Add =async (e:React.FormEvent)=>{
@@ -127,9 +127,7 @@ const change = (e: React.ChangeEvent<HTMLInputElement>) => {
   if (e.target.files) {
     const fileArray = Array.from(e.target.files).map((file) =>URL.createObjectURL(file) );
     setFiles((prev) => prev.concat(fileArray));
-    const files = Array.from(e.target.files); 
-    const imageUrls = files.map((file) => URL.createObjectURL(file)); 
-    setimage(imageUrls); 
+   setimage(Array.from(e.target.files));
 
     console.log(image)
   }
@@ -158,7 +156,7 @@ const render = (source: string[]) => {
         <h3 className="text-xl font-bold text-gray-700 mb-4">
           Product Information
         </h3>
-        <div className="result flex">{render(image)}</div>
+        <div className="result flex flex-col md:flex-row">{render(selectedFiles)}</div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="product-name" className="block text-gray-600 mb-2">
