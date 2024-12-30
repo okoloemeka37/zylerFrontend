@@ -32,7 +32,7 @@ export default function Navbar() {
 
     if (response.status === 200) {
       logout()
-      route.push("http://localhost:3000/auth/Login");
+      route.push(BASE_URL+`/auth/Login`);
       setisLoaded(false)
     }
   }
