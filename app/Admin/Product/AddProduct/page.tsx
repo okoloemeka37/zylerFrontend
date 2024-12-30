@@ -193,7 +193,7 @@ const render = (source: string[]) => {
               value={data.price}
               onChange={(e)=>{
                setData(prevData=>({
-                 ...prevData,price:Number(e.target.value)
+                 ...prevData,price:e.target.value
                }))
               }}
             />
