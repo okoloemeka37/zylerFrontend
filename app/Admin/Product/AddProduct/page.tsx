@@ -125,6 +125,8 @@ const formDataObject: Record<string, unknown> = Object.fromEntries(formData.entr
 const change = (e: React.ChangeEvent<HTMLInputElement>) => {
   setFiles([]);
   if (e.target.files) {
+    const fileArray = Array.from(e.target.files).map((file) =>URL.createObjectURL(file) );
+    setFiles((prev) => prev.concat(fileArray));
     const files = Array.from(e.target.files); 
     const imageUrls = files.map((file) => URL.createObjectURL(file)); 
     setimage(imageUrls); 
@@ -232,7 +234,7 @@ const render = (source: string[]) => {
              <option value="">Select Category</option>
               <option  value="Top">Top</option>
               <option value="Bottom">Bottom</option>
-              <option value="Dresses">Dresses</option>
+              <option value="Dress">Dress</option>
               <option value="BodyWears">BodyWears</option>
               <option value="Footwear">Footwear</option>
               <option value="Accessories">Accessories</option>
