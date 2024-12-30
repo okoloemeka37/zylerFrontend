@@ -8,7 +8,7 @@ import { HiTrash } from "react-icons/hi";
 
 interface Data{
   'name':string,
-  'price':number,
+  'price':string,
   'stock':number,
   'category':string,
   'tag':string,
@@ -63,7 +63,7 @@ const [Errors, setErrors] = useState({
 
 const [data, setData] = useState<Data>(  {
   'name':"",
-  'price':1,
+  'price':'1',
   'stock':1,
   'category':"",
   'tag':"",

@@ -47,7 +47,7 @@ export default function OrderDetailsPage({params}: PageProps) {
     setisLoaded(false);
     const resp = await EditProductFunc(`editOrderStat${order.order_id}`, token, upStat);
 console.log(resp?.result.message)
-    if (resp?.result.message === "Status Upated") {
+    if (resp?.result.message === "Upated") {
       setisLoaded(true);
       setorder(prev => ({
         ...prev, status: upStat.status
