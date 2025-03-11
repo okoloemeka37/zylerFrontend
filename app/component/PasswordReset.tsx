@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import {UpdateController} from "@/app/actions/Auth";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
+import ButtonLoaders from '@/app/component/Loaders'
 
 interface PasswordResetProps {
   Email: string;
@@ -15,10 +16,13 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ Email }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState('');
   const [suc, setsuc] = useState('')
+  const [isLoaded, setisLoaded] = useState(false);
+  
 
 
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setisLoaded(true)
     if (password.length === 0 || password !== confirmPassword) {
       setError("Passwords Do not Match");
     } else {
@@ -27,6 +31,7 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ Email }) => {
       console.log(resp?.result);
       if (resp && resp.result) {
         setsuc(resp.result.data.message);
+        setisLoaded(false)
       }
 
       setTimeout(() => {
@@ -81,12 +86,8 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ Email }) => {
          
           />
         </div>
-        <button
-          type="submit"
-          className="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Reset Password
-        </button>
+{!isLoaded?(<button type="submit"  className="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" >Reset Password </button>):(<ButtonLoaders ty={'loading'} />)}
+
       </form>
       <div className="mt-4 text-center">
         <a

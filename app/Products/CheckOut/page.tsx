@@ -64,8 +64,23 @@ export default function Checkout() {
     StackPaymentId: '0'
   })
 
-  const selectRef = useRef<HTMLSelectElement>(null);
 
+  useEffect(() => {
+    if (!token||!userCred) {
+      router.push("http://localhost:3000/auth/Login")
+  }
+  }, [token,router,userCred])
+  
+
+  const selectRef = useRef<HTMLSelectElement>(null);
+ const [PageLoading, setPageLoading] = useState(true)  
+  useEffect(() => {
+  
+ const timer= setTimeout(() => {setPageLoading(false)},2000)
+ return () => {
+ clearTimeout(timer)
+    }
+  }, [])
   useEffect(() => {
     if (typeof window !== 'undefined') {
       // Use browser-specific code here
@@ -141,6 +156,15 @@ export default function Checkout() {
     },
     onClose: () => alert("Wait! Don't leave :("),
   }
+  if (PageLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    )
+  
+ }else{
+
 
   return (
     <div className="container mx-auto py-10 px-4">
@@ -269,6 +293,7 @@ export default function Checkout() {
       </div>
     </div>
   )
+ }
 }
 
 

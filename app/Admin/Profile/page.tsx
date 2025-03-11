@@ -12,6 +12,7 @@ const [product, setproduct] = useState({'id':0})
 const [user, setuser] = useState({'id':0})
 const [order, setorder] = useState({'order_id':0})
 const [noti, setnoti] = useState([{'notice':'','type_id':0,'id':0}])
+const [revenue,setRevenue]=useState<number>();
 
 useEffect(() => {
   if (!token) {
@@ -26,6 +27,7 @@ useEffect(() => {
 setproduct(resp?.result[0][0]);
 setuser(resp?.result[2][0]);
 setorder(resp?.result[1][0]||{'order_id':0});
+setRevenue(resp?.result[3]);
 
 //notification
 const not=await single('getNote',token);
@@ -127,12 +129,13 @@ if (typeof location !== 'undefined') {
         <div>
         
           <h3 className="text-xl font-bold text-gray-700">Total Users</h3>
-          <p className="text-gray-500">{user.id}</p>
+          <p className="text-gray-500">{user?user.id:0}</p>
           
         </div>
       </div>
       </Link>
       {/* Card for Total Revenue */}
+      <Link href="../Admin/Revenues">
       <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
         <div className="mr-4 p-3 bg-yellow-100 rounded-full">
           <svg
@@ -151,11 +154,12 @@ if (typeof location !== 'undefined') {
           </svg>
         </div>
         <div>
+
           <h3 className="text-xl font-bold text-gray-700">Total Revenue</h3>
-          <p className="text-gray-500">$3,500</p>
+          <p className="text-gray-500">#{revenue}</p>
         </div>
       </div>
-
+</Link>
       {/* Recent Orders */}
       <div className="col-span-1 md:col-span-2 lg:col-span-3 bg-white rounded-lg shadow-md p-6">
         

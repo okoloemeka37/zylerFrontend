@@ -28,7 +28,7 @@ export function AuthProvider({ children }:{children:React.ReactNode}) {
     const [isAuthenticated, setAuthenticated] = useState(false);
     const [userCred, setuserCred] = useState<{name: string, email: string, status: string, id: string, carts: [], orders: [], phone: string, address: string,image:string}>({name:'',email:'',status:'',id:'',carts:[],orders:[],phone:'', address:'',image:''});
     const [token, setToken] = useState<string>('')
-    const [BASE_URL] = useState('https://zylerfrontend.onrender.com/')
+    const [BASE_URL] = useState('http://localhost:3000/')
 
     useEffect(() => {
       const token=localStorage.getItem("Token")!;

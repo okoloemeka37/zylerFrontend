@@ -10,6 +10,13 @@ const nextConfig: import('next').NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'img.daisyui.com',
+        port: '',
+        pathname: '/**',
+      },
+      
+      {
+        protocol: 'https',
         hostname: 'addict-clothes-store.com',
         port: '',
         pathname: '/**',

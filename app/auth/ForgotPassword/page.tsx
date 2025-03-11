@@ -39,7 +39,7 @@ const sendLink=async()=>{
       <div className="w-full max-w-md bg-white shadow-md rounded-lg p-6">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Forgot Password</h2>
         <p className="text-sm text-gray-600 mb-4 text-center">
-          Enter your email address below, and we will send you a link to reset your password.
+          Enter your email address below, and we will send you a token to reset your password.
         </p>
     
           <div className="mb-4">

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/*
 'use client'
 import { EditProductFunc, single } from '@/app/actions/Product';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
-
+import React, { useEffect, useRef, useState } from 'react'
+import HandleImageSep from "@/app/functions/Admin"
 
 
 
@@ -23,6 +24,8 @@ interface PageProps {
   params: Promise<Params>;
 }
 
+
+
 export default function EditProduct({params}: PageProps) {
 const router=useRouter()
   const [Errors, setErrors] = useState({
@@ -32,7 +35,8 @@ const router=useRouter()
     "name":'' ,
    'tag':'',
    'price':'',
-   'stock':''
+   'stock':'',
+   'image':''
    })
 
 
@@ -41,10 +45,12 @@ const router=useRouter()
     "category":'',
 "Description":'',
 "gender":'',
- "name":'' ,
+ "name":'hgj' ,
 'tag':'',
 'price':'',
-'stock':''
+'stock':'',
+'image':'',
+
   })
     const [title, setTitle] = useState<string>();
  const [tTS, settTS] = useState<string[]>([])
@@ -58,29 +64,36 @@ useEffect(() => {
     setTitle(resolvedParams.ProductEdit);
 
     const res=  await single(`ViewProduct/${resolvedParams.ProductEdit}`,localStorage.getItem("Token")!);
-    setResData(res?.result.data);
+    setResData(res?.result.data[0]);
 
+    console.log(res?.result.data[0])
     
 
 
     }
 unwrapParams()
-}, [params,title])
+}, [params,token])
+
+const handleUpdate = (remainingImages: string[]) => {
+  setResData((prev) => ({ ...prev, image: remainingImages.join(",") }));
+};
 
 
  const Edit=async (e: React.FormEvent<HTMLFormElement>)=>{
   e.preventDefault()
+
+  
 //used the AddProduct Function for this one only differrence is the url attached;
 
 const res= await EditProductFunc(`UpdateProduct/${resData.id}`,token,resData)
 console.log(res)
 if (res?.status===200) {
-  router.push("../../../Admin/Product")
+ // router.push("../../../Admin/Product")
 } if (res?.status===422) {
-  setErrors(res.error)
+ // setErrors(res.error)
 }
 }
-
+const mainclick = useRef<HTMLInputElement>(null)
 
   return (
     <div>
@@ -88,13 +101,16 @@ if (res?.status===200) {
     <header className="mb-6 bg-white p-4 rounded-lg shadow-md">
       <h2 className="text-2xl font-semibold text-gray-800">Edit Product({resData.name})</h2>
     </header>
-    <form className="bg-white p-6 rounded-lg shadow-md space-y-6"  onSubmit={Edit}>
-      {/* Product Information */}
+    <form className="bg-white p-6 rounded-lg shadow-md space-y-6"  onSubmit={Edit} encType="multipart/form-data">
+      {/* Product Information }
       <div>
         <h3 className="text-xl font-bold text-gray-700 mb-4">
           Product Information
         </h3>
+        <div className='flex'> <HandleImageSep images={resData.image} onUpdate={handleUpdate} /></div>  
+            <div className="result flex flex-col md:flex-row">{Render({ source: selectedFiles, remove })}</div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+     
           <div>
             <label htmlFor="product-name" className="block text-gray-600 mb-2">
               Product Name
@@ -136,6 +152,14 @@ if (res?.status===200) {
             />
             <p className="text-red-600">{Errors.price}</p>
           </div>
+
+   <input type="file" className="invisible" name="" ref={mainclick} multiple  id="file" onChange={(e)=>{Change({ e, setFiles, setimage })}} />
+
+          <span className="bg-green-500 cursor-pointer text-white px-6 py-2 rounded-md hover:bg-green-600 transition duration-200" onClick={() => fakeClick(mainclick)} >Add Images</span>
+
+
+
+
           <div>
             <label htmlFor="product-stock" className="block text-gray-600 mb-2">
               Stock Quantity
@@ -167,7 +191,7 @@ if (res?.status===200) {
             <select
               id="product-category"
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-              value={resData['category']}
+       
 
               onChange={(e)=>{
              const val: string = e.target.value; settTS(cats[val] || [])
@@ -184,7 +208,7 @@ if (res?.status===200) {
               <option value="BodyWears">BodyWears</option>
               <option value="Footwear">Footwear</option>
               <option value="Accessories">Accessories</option>
-              {/* Add more categories as needed */}
+              {/* Add more categories as needed }
             </select>
              <p className="text-red-600">{Errors.category}</p>
           </div>
@@ -200,7 +224,7 @@ if (res?.status===200) {
             <select
               id="product-gender"
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-              value={resData['gender']}
+          
 
               onChange={(e)=>{
                
@@ -249,7 +273,7 @@ if (res?.status===200) {
 
         </div>
       </div>
-      {/* Product Description */}
+      {/* Product Description }
       <div>
         <label htmlFor="product-description" className="block text-gray-600 mb-2">
           Product Description
@@ -271,7 +295,7 @@ if (res?.status===200) {
           />
         <p className="text-red-600">{Errors.Description}</p>
       </div>
-      {/* Image Upload */}
+      {/* Image Upload }
       <div>
         <label htmlFor="product-image" className="block text-gray-600 mb-2">
           Upload Product Image
@@ -297,3 +321,4 @@ if (res?.status===200) {
     </div>
   )
 }
+*/

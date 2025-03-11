@@ -1,24 +1,38 @@
 'use client'
-import React, { useEffect,useState } from 'react'
-import Image from 'next/image';
+import { useEffect,useState } from 'react'
+
 import { DeleteProduct, single } from '@/app/actions/Product';
 import { useAuth } from '@/app/context/AuthContext';
 import { HiTrash } from "react-icons/hi";
 import Link from 'next/link';
 import { CartLoader } from '@/app/component/ContentLoader';
 import { useRouter } from 'next/navigation';
+import ImageHelper from '@/app/component/ImageHelper';
+
 export default function Cart() {
  const router= useRouter()
  const {token,userCred,User}= useAuth()
 const [data, setData] = useState([{ id: '', name: '', price: 1, stock: 1, cart: [{ stock: 1 }], category: '', tag: '', gender: '', Description: '', image: '' }]);
 const [IsLoaded, setIsLoaded] = useState(false);
+ const [PageLoading, setPageLoading] = useState(true)  
+  useEffect(() => {
+  
+ const timer= setTimeout(() => {setPageLoading(false)},2000)
+ return () => {
+ clearTimeout(timer)
+    }
+  }, [])
 
  useEffect(() => {
-  if (!token) {
+  if (!token||!userCred) {
     router.push("http://localhost:3000/auth/Login")
 }
+}, [token,router,userCred])
 
-   if (token!=='') {
+
+
+useEffect(() => {
+  if (token!=='') {
     async function rt() {
       setIsLoaded(true)
       
@@ -30,8 +44,7 @@ const [IsLoaded, setIsLoaded] = useState(false);
   rt()
   
    }
-}, [router, userCred,token])
-
+}, [userCred,token])
 
 //remove from cart
 
@@ -46,6 +59,16 @@ console.log(resp.result.cart);
 setIsLoaded(false);
 
 }
+
+if (PageLoading) {
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+    </div>
+  )
+
+}else{
+
 
   return (
     <div className="container mx-auto py-10 px-4">
@@ -70,7 +93,7 @@ setIsLoaded(false);
   (
   <div className="flex items-center justify-between border-b pb-4" key={index}>
   <div className="flex items-center">
-    <Image src={`https://raw.githubusercontent.com/okoloemeka37/ImageHolder/main/uploads/`+item.image} alt="Product Image" width={80} height={80} className="w-20 h-20 object-cover rounded-lg mr-4"  />
+      <div className='w-40'> <ImageHelper Product={item} width={'full'} height={36} count={0} /></div>
     <div>
       <h3 className="text-lg font-semibold text-gray-800">
         {item.name}
@@ -105,4 +128,5 @@ setIsLoaded(false);
 </div>
 
   )
+}
 }

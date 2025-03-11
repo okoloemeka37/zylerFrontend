@@ -1,10 +1,13 @@
 "use client"
 import { AddProductFunc } from "@/app/actions/Product"
 import {useRouter } from "next/navigation";
-import Image from "next/image";
-import { useEffect, useState } from "react"
+
+import { useEffect, useState,useRef } from "react"
 import "../../../../styles/body.css"
-import { HiTrash } from "react-icons/hi";
+
+import ButtonLoaders from "@/app/component/Loaders";
+import fakeClick, { Addfield, Change, Render } from "@/app/component/Funcs";
+
 
 interface Data{
   'name':string,
@@ -32,9 +35,11 @@ export default function AddProduct() {
   const [selectedFiles, setFiles] = useState<string[]>([]);
 
   const remove = (index: number) => {
-    const newFiles = selectedFiles.filter((_, i) => i !== index);
-    setFiles(newFiles);
+     const newFiles = selectedFiles.filter((_, i) => i !== index);
+    setFiles(newFiles); 
+
     removed.push(index);
+  
   };
 
 
@@ -71,12 +76,59 @@ const [data, setData] = useState<Data>(  {
   'Description':"",
   
 });
+
+
+//adding
+
 const [image, setimage] = useState<File[]>([]);
+
+const [isLoaded, setisLoaded] = useState(false)
 
 const formData=new FormData()
 const Add =async (e:React.FormEvent)=>{
   e.preventDefault();
-console.log(data)
+
+
+//handle dynamic fields
+const dyn= document.querySelectorAll(".dynamic-field");
+
+const dynObj: { [key: string]: string } = {}
+
+for (let i = 0; i < dyn.length; i++) {
+  let check=0;
+  const val = dyn[i].querySelector('.val') as HTMLInputElement;
+
+if (val.value.length === 0) {
+  console.log(val)
+  const err = document.createElement('p');
+  err.textContent = 'This Field Must Not Be Empty';
+  err.className = 'text-red-600';
+
+  val.parentElement?.parentElement?.appendChild(err); 
+  check=1
+}else{check=0}
+
+const nam = dyn[i].querySelector('.na') as HTMLInputElement;
+console.log(val)
+if (nam.value.length === 0) {
+  const err = document.createElement('p');
+  err.textContent = 'This Field Must Not Be Empty';
+  err.className = 'text-red-600';
+
+  nam.parentElement?.appendChild(err); 
+  
+  check=1
+  return false;
+}else{check=0}
+if(check===0) {
+
+ dynObj[nam.value] = val.value;
+}
+}
+
+
+
+
 formData.append('name',data['name']);
 formData.append('price', data['price'].toString());
 formData.append('stock',data['stock'].toString());
@@ -84,65 +136,49 @@ formData.append('category',data['category']);
 formData.append('tag',data['tag']);
 formData.append('gender',data['gender']);
 formData.append('Description',data['Description']);
+if(Object.keys(dynObj).length > 0) formData.append('dynamicField', JSON.stringify(dynObj));
+
 
 if(image){
+  if (removed.length === 0) {
   for (let index = 0; index < image.length; index++) {
-    if (removed.length === 0) {
       formData.append("images[]", image[index]);
-      console.log("mio",formData)
-    } else {
-      for (let i = 0; i < removed.length; i++) {
-        if (index === removed[i]) {
-          continue;
-        } else {
-          formData.append("images[]", image[index]);
-          console.log("pol")
-        }
+      console.log('pl'+image)
+    }
+  }else{
+    for (let index = 0; index < image.length; index++) {
+      if (!removed.includes(index)) {
+        formData.append("images[]", image[index]);
       }
     }
   }
-  console.log(image)
+
 }
 
-const formDataObject: Record<string, unknown> = Object.fromEntries(formData.entries());
+//const formDataObject: Record<string, unknown> = Object.fromEntries(formData.entries());
 
+setisLoaded(true)
 
-   const resp=await AddProductFunc(`AddProduct`,token,formDataObject);
+const resp=await AddProductFunc(`AddProduct`,token,formData);
+ 
+ 
+ if (resp?.status===200) {
+  router.push("../../../Admin/Product")
   
-   if (resp?.status===200) {
-   router.push("../../../Admin/Product")
-     console.log(resp.result);
+      setisLoaded(false)
+  
    }
    if (resp?.status===422) {
      setErrors(resp.error)
-   }
+     setisLoaded(false)
+   }  
 }
 
 
-//imageUp
 
+const mainclick = useRef<HTMLInputElement>(null)
+const morefields=useRef<HTMLDivElement>(null)
 
-const change = (e: React.ChangeEvent<HTMLInputElement>) => {
-  setFiles([]);
-  if (e.target.files) {
-    const fileArray = Array.from(e.target.files).map((file) =>URL.createObjectURL(file) );
-    setFiles((prev) => prev.concat(fileArray));
-   setimage(Array.from(e.target.files));
-
-    console.log(image)
-  }
-};
-
-const render = (source: string[]) => {
-  return source.map((photo, ind) => (
-    <div key={ind} className="ml-5">
-      <p onClick={() => remove(ind)}>  <HiTrash size={20} /> Remove</p>
-      <Image src={photo} alt="" width={300} height={300} className="Impl" />
-     
-
-    </div>
-  ));
-};
 
   return (
     <div className="container mx-auto p-5">
@@ -156,8 +192,8 @@ const render = (source: string[]) => {
         <h3 className="text-xl font-bold text-gray-700 mb-4">
           Product Information
         </h3>
-        <div className="result flex flex-col md:flex-row">{render(selectedFiles)}</div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="result flex flex-col md:flex-row">{Render({ source: selectedFiles, remove })}</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6"  ref={morefields}>
           <div>
             <label htmlFor="product-name" className="block text-gray-600 mb-2">
               Product Name
@@ -178,8 +214,24 @@ const render = (source: string[]) => {
         <p className="text-red-600">{Errors.name}</p>
           </div>
 <div>
-          <input type="file" name="" multiple  id="file" onChange={change} />
-          <p className="text-red-600">{Errors.image}</p>
+          <input type="file" className="invisible" name="" ref={mainclick} multiple  id="file" onChange={(e)=>{Change({ e, setFiles, setimage })}} />
+
+          <span className="bg-green-500 cursor-pointer text-white px-6 py-2 rounded-md hover:bg-green-600 transition duration-200" onClick={() => fakeClick(mainclick)} >Add Images</span>
+
+
+
+
+          <div className="relative inline-block group">
+      <div><span className="bg-blue-500 text-white p-2 rounded cursor-pointer" >Add More Input Fields</span></div>
+      <div className="absolute left-0 mt-2 w-40 bg-white shadow-lg rounded-md opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all duration-300">
+        <span  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={()=>Addfield(morefields,'text')}>Text</span>
+        <span  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={()=>Addfield(morefields,'number')}> Number</span>
+      </div>
+    </div>
+
+
+
+           <p className="text-red-600">{Errors.image}</p>
 </div>
           <div>
             <label htmlFor="product-price" className="block text-gray-600 mb-2">
@@ -229,6 +281,7 @@ const render = (source: string[]) => {
            onChange={(e)=>{const val:string=e.target.value;settTS(cats[val] || [])
             setData(prevData=>({
               ...prevData,category:e.target.value })) }  }  >
+                
              <option value="">Select Category</option>
               <option  value="Top">Top</option>
               <option value="Bottom">Bottom</option>
@@ -236,7 +289,7 @@ const render = (source: string[]) => {
               <option value="BodyWears">BodyWears</option>
               <option value="Footwear">Footwear</option>
               <option value="Accessories">Accessories</option>
-              {/* Add more categories as needed */}
+            
             </select>
             <p className="text-red-600">{Errors.category}</p>
           </div>
@@ -294,17 +347,19 @@ const render = (source: string[]) => {
             <p className="text-red-600">{Errors.tag}</p>
           </div>
 
+
+
         </div>
       </div>
       {/* Product Description */}
       <div>
         <label htmlFor="product-description" className="block text-gray-600 mb-2">
-          Product Description
+          Product Highlights
         </label>
         <textarea
           id="product-description"
           rows={4}
-          placeholder="Enter product description"
+          placeholder="highlights separated by comma"
           className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
           onChange={(e)=>{
             setData(prevData=>({
@@ -317,14 +372,7 @@ const render = (source: string[]) => {
           <p className="text-red-600">{Errors.description}</p>
       </div>
      
-      <div className="flex justify-end">
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-200"
-        >
-          Upload Product
-        </button>
-      </div>
+      <div className="flex justify-end"> {!isLoaded?( <button type="submit"   className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-200"> Upload Product </button>):(<ButtonLoaders ty={'Creating Product'} />)}</div>
     </form>
   </div>
   

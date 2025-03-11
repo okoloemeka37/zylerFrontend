@@ -8,7 +8,10 @@ import { SingleProduct } from '@/app/component/ContentLoader';
 import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
-import Image from 'next/image';
+
+import ImageHelper from '@/app/component/ImageHelper';
+import ButtonLoaders from '@/app/component/Loaders';
+
 
 interface Params {
   ProductView: string;
@@ -18,16 +21,57 @@ interface PageProps {
   params: Promise<Params>;
 }
 
+function resol(dat:{ 'id': number, 'name': string, 'price': number, 'stock': number, 'image': string, 'category': string, 'tag': string, 'gender': string, 'Description': string,'dynamicField':string}) {
+  const dah=dat['dynamicField'];
+  if (dah) {
+    const obj=JSON.parse(dah);
+  return (
+    <>
+      {Object.entries(obj).map(([key, val]) => (
+        <div key={key}>
+          <p ><span className="text-gray-800  mb-4 font-semibold">{key}</span>: {val as React.ReactNode}</p>
+        </div>
+      ))}
+    </>
+  );
+  }
+}
+function highlights(dat:{ 'id': number,'Description':string, 'name': string, 'price': number, 'stock': number, 'image': string, 'category': string, 'tag': string  }) {  
+  const hig=dat['Description'].split(',');
+  return (
+    <>
+      {hig.map((val,index) => (
+        <div key={index}>
+        <ul className="list-disc list-inside text-gray-700 space-y-2">
+        <li>{val}</li>
+       
+      </ul>
+      </div>
+      ))}
+    </>
+  );
+}
 export default function SHOW({ params }: PageProps) {
   const router = useRouter()
   const { token, userCred, BASE_URL, User } = useAuth()
   const [isLoad, setisLoad] = useState(false);
   const [Incart, setIncart] = useState('Add To Cart')
-  const [data, setData] = useState({ 'id': 0, 'name': "", 'price': 1, 'stock': 1, 'image': '', 'category': "", 'tag': "", 'gender': "", 'Description': "", });
+  const [data, setData] = useState({ 'id': 0, 'name': "", 'price': 1, 'stock': 1, 'image': '', 'category': "", 'tag': "", 'gender': "", 'Description': "", 'dynamicField': "" });
   const [Related, setRelated] = useState([{ 'id': 0, 'name': "", 'price': 1, 'stock': 1, 'category': "", 'tag': "", 'gender': "", 'Description': "", 'image':''}]);
   const [chosenStock, setchosenStock] = useState('1');
   const [image, setImage] = useState<string[]>([]);
   const [count, setCount] = useState(0);
+
+  const [isLoaded, setisLoaded] = useState(false)
+
+   const [PageLoading, setPageLoading] = useState(true)  
+    useEffect(() => {
+    
+   const timer= setTimeout(() => {setPageLoading(false)},2000)
+   return () => {
+   clearTimeout(timer)
+      }
+    }, [])
 
   useEffect(() => {
     async function unwrapParams() {
@@ -35,7 +79,7 @@ export default function SHOW({ params }: PageProps) {
       const resolvedParams = await params;
       const res = await singleIndex(`ViewProduct/${resolvedParams.ProductView}`);
       setData(res?.result.data[0]);
-      console.log(res?.result.data[0])
+     
       setisLoad(false);
 
       if (res?.result.data[0].cart.length == 1) {
@@ -53,6 +97,7 @@ export default function SHOW({ params }: PageProps) {
   }, [])
 
   const AddToCart = async () => {
+    setisLoaded(true)
     if (token) {
       const prepData = {
         'user_id': userCred!.id,
@@ -61,6 +106,7 @@ export default function SHOW({ params }: PageProps) {
       }
       const resp = await AddProductFunc('AddCart', token, prepData);
       if (resp?.result.message) {
+        setisLoaded(false)
         setIncart('In Cart');
         User(resp?.result.user)
         router.push(BASE_URL + "Products/Cart");
@@ -86,94 +132,146 @@ export default function SHOW({ params }: PageProps) {
   }
   }, [data.id,token,userCred]);
 
+  const [cCount, setcCount] = useState(1)
+
   const handleIncrement = () => {
-    setCount((prevCount) => prevCount + 1);
+    setCount((prevCount) =>prevCount + 1);
+    setcCount((prevCount) =>prevCount + 1);
     if ((image.length - 1) == count) {
       setCount(0);
+      setcCount(1);
     }
   };
 
   const handleDecrement = () => {
-    if (count === 0) {
+   /*  if (count === 0) {
       setCount(image.length - 1)
+      setcCount(4);
+    } */
+   console.log(count)
+    setCount((prevCount) =>prevCount - 1);
+    setcCount((prevCount) =>prevCount - 1);
+    if (count===0) {
+      setCount(image.length-1)
+      setcCount(image.length);
     }
-    setCount((prevCount) => prevCount - 1);
+   
   };
 
+  if (PageLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    )
+  
+ }else{
+  const others = resol(data);
   return (
     <div className="container mx-auto py-10 px-4">
       {isLoad ? (<SingleProduct />) :
         (
           <div className="flex flex-col lg:flex-row gap-10">
-            <div className="lg:w-2/3 bg-white rounded-lg shadow-lg p-6">
-              <div className='flex absZ w-3/6 justify-between' ><p onClick={handleDecrement}><HiChevronLeft size={50} /></p> <p className='lp' onClick={handleIncrement}><HiChevronRight size={50} /></p></div>
-              <div className="mb-6">
-                <Image
-                  src={`https:\/\/raw.githubusercontent.com\/okoloemeka37\/ImageHolder\/main\/uploads\/${image[count]}`}
-                  alt="Product Image"
-                  className="w-full h-auto object-cover rounded-lg"
-                  width={500}
-                  height={500}
-                />
-              </div>
-              <div>
-                <h2 className="text-3xl font-bold text-gray-800 mb-2">Name: {data.name}</h2>
-                <p className="text-gray-600 text-lg mb-4">Description: {data.Description}</p>
-                <div className="flex items-center mb-4">
-                  <span className="text-2xl font-semibold text-gray-800">Price: {data.price}</span>
-                </div>
-                <p className="text-gray-600 mb-4"></p>
-                <p className="text-gray-600 mb-4">
-                  Category: <span className="font-semibold">{data.category}</span>
-                </p>
 
-                <p className="text-gray-600 mb-4">
-                  Tag: <span className="font-semibold">{data.tag}</span>
-                </p>
-                <p className="text-gray-600 mb-4">
-                  Gender: <span className="font-semibold">{data.gender}</span>
-                </p>
+
+            <div className="lg:w-2/3 bg-white rounded-lg shadow-lg p-6">
+
+             
+             
+            <div className="flex justify-center">
+  <div className="relative w-[900px] h-[500px] overflow-hidden"> {/* Fixed container size */}
+    {/* Image */}
+  
+    <ImageHelper Product={data} height={'full'} width={'full'} count={count} />
+    {/* Left Button */}
+    <p
+      onClick={handleDecrement}
+      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 p-2 rounded-full text-white cursor-pointer"
+    >
+      <HiChevronLeft size={50} />
+    </p>
+
+    {/* Right Button */}
+    <p
+      onClick={handleIncrement}
+      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 p-2 rounded-full text-white cursor-pointer"
+    >
+      <HiChevronRight size={50} />
+    </p>
+
+    {/* Counter */}
+    <p className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black/50 px-3 py-1 text-white rounded">
+      {cCount}/{image.length}
+    </p>
+  </div>
+</div>
+
+
               
-              
-                <div className="flex items-center space-x-4 mb-6">
-                  <label htmlFor="quantity" className="text-gray-600">
-                    Quantity:
-                  </label>
-                  <input
-                    type="number"
-                    id="quantity"
-                    name="quantity"
-                    min={1}
-                    className="w-16 px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value={chosenStock}
-                    onChange={(e) => { setchosenStock(e.target.value) }}
-                  />
+
+
+
+              <div>
+
+
+ <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-6 border border-gray-200">
+  <div className="flex flex-wrap md:flex-nowrap gap-8">
+    {/* Left Section */}
+    <div className="flex-1 space-y-4">
+      <p ><span className=" font-semibold text-gray-800">Name </span>: {data.name}</p>
+     
+      <p>
+        <span className="font-semibold text-gray-800">Price: {data.price}</span>
+      </p>
+      <p className="text-gray-600">
+        <span className="font-semibold text-gray-800">Category:</span> {data.category}
+      </p>
+      <p className="text-gray-600">
+        <span className="font-semibold text-gray-800">Tag:</span> {data.tag}
+      </p>
+      <p className="text-gray-600">
+        <span className="font-semibold text-gray-800">Gender:</span> {data.gender}
+      </p>
+
+
+               <div className="flex items-center space-x-4 mb-6">
+                  <label htmlFor="quantity" className="font-semibold  text-gray-800"> Quantity:  </label>
+                  <input type="number"   id="quantity" name="quantity" min={1} className="w-16 px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" value={chosenStock}onChange={(e) => { setchosenStock(e.target.value) }} />
                 </div>
-                <div className="flex space-x-4">
-                  <button className="flex-1 bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-200">
-                    {token ? ('Buy') : (
-                      <Link href="/auth/Login">Buy</Link>
-                    )}
-                  </button>
-                  <button className="flex-1 bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition duration-200" onClick={AddToCart}>
-                    {token ? Incart : (
-                      <Link href="/auth/Login">Add To Cart</Link>
-                    )}
-                  </button>
+
+
+    </div>
+
+    {/* Right Section */}
+    <div className="flex-1 space-y-3 ">
+      {data.dynamicField?(<h3 className="text-xl font-semibold text-gray-800 mb-4  pb-2">More Details</h3>):''}
+      { others}
+    </div>
+  </div>
+</div>
+ 
+              
+                <div className="flex space-x-4 justify-between">
+                  <div className='w-full'><button className="flex-1 w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-200">
+                    {token ? ('Buy') : ( <Link href="/auth/Login">Buy</Link> )}
+                  </button></div>
+                        <div className='w-full'> {!isLoaded?(  <button className="flex-1 w-full bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition duration-200" onClick={AddToCart}>
+                    {token ? Incart : (<Link href="/auth/Login">Add To Cart</Link>)}
+                  </button>):(<ButtonLoaders ty={'change'} />)}</div>
+
+                 
                 </div>
               </div>
             </div>
+
+
+
             <div className="lg:w-1/3 space-y-6">
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <h3 className="text-xl font-bold text-gray-800 mb-4">
                   Product Highlights
                 </h3>
-                <ul className="list-disc list-inside text-gray-700 space-y-2">
-                  <li>High-quality material</li>
-                  <li>Available in multiple colors</li>
-                  <li>Comfortable fit</li>
-                  <li>30-day return policy</li>
-                </ul>
+               <div>{highlights(data)}</div>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <h3 className="text-xl font-bold text-gray-800 mb-4">
@@ -207,4 +305,5 @@ export default function SHOW({ params }: PageProps) {
       </div>
     </div>
   )
+}
 }

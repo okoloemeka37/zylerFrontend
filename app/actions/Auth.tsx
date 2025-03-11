@@ -5,9 +5,10 @@ import axios from "axios";
 
 export default async function AuthController(data:object,url:string) {
 
+
 try {
   
-  const resp=await axios.post(`https://zyler.cleverapps.io/api/${url}`,data)!;
+  const resp=await axios.post(`http://127.0.0.1:8000/api/${url}`,data)!;
 return {status:200,'result':resp};
 
 } catch (error:unknown) {
@@ -34,7 +35,7 @@ if (axios.isAxiosError(error)) {
 
 export  async function LogoutController(token:string) {
  
-    const Resp=await axios.post("https://zyler.cleverapps.io/api/logout",{},{
+    const Resp=await axios.post("http://127.0.0.1:8000/api/logout",{},{
      headers: {
          Authorization: `Bearer ${token}`,
        },
@@ -50,7 +51,7 @@ export  async function LogoutController(token:string) {
 export  async function UpdateController(url:string,data:object) {
  
   try {
-  const resp=await axios.put(`https://zyler.cleverapps.io/api/${url}`,data)
+  const resp=await axios.put(`http://127.0.0.1:8000/api/${url}`,data)
  return {status:200,'result':resp};
 }
  catch (error:unknown) {
@@ -71,7 +72,7 @@ export  async function UpdateController(url:string,data:object) {
 export  async function UpdateCont(url:string,data:object,token:string) {
 
   try {
-  const resp=await axios.post(`https://zyler.cleverapps.io/api/${url}`,data,{
+  const resp=await axios.post(`http://127.0.0.1:8000/api/${url}`,data,{
     headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -91,6 +92,20 @@ export  async function UpdateCont(url:string,data:object,token:string) {
     return {status:500,'error':'An unknown error occurred'};
   }
 }
+}
+
+export  async function DeleteController(token:string,url:string,data:[]) {
+ 
+  const Resp=await axios.post(`http://127.0.0.1:8000/api/${url}`,{data},{
+   headers: {
+       Authorization: `Bearer ${token}`,
+     },
+ })
+ 
+ return Resp;
+ 
+ 
+ 
 }
 
 

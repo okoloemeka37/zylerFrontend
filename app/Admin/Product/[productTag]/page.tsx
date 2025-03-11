@@ -85,9 +85,7 @@ export default function ProductsList({ params }: PageProps) {
                     <p className="text-gray-600">Stock: {rel.stock}</p>
                     <div className="mt-4 flex space-x-2">
                       <button className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition duration-200">
-                        <Link href={`../../../user/Product/ProductEdit/${rel.id}`}>
-                          Edit
-                        </Link>
+                        <Link href={`../Product/ProductEdi/${rel.id}`}>Edit</Link>
                       </button>
                       <button className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition duration-200" onClick={() => Delete(rel.id)}>
                         Delete
