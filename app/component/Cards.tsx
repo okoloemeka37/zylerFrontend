@@ -31,7 +31,7 @@ export function ProCard({ Product, ac }: ProCardProps) {
             >
               {/* Image */}
               <div className="relative h-56">
-                <Image
+                <img
                   src={`https://raw.githubusercontent.com/okoloemeka37/ImageHolder/main/uploads/${image[0]}`}
                   alt="Product Image"
                   width={500}

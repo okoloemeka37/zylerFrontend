@@ -1,14 +1,14 @@
 
 import axios from "axios";
 
-
+const BASEURL='http://127.0.0.1:8000/api/';
 
 export default async function AuthController(data:object,url:string) {
 
 
 try {
   
-  const resp=await axios.post(`https://zylerbackend.onrender.com/api/${url}`,data)!;
+  const resp=await axios.post(`${BASEURL+url}`,data)!;
 return {status:200,'result':resp};
 
 } catch (error:unknown) {
@@ -35,7 +35,7 @@ if (axios.isAxiosError(error)) {
 
 export  async function LogoutController(token:string) {
  
-    const Resp=await axios.post("https://zylerbackend.onrender.com/api/logout",{},{
+    const Resp=await axios.post(`${BASEURL+"logout"}`,{},{
      headers: {
          Authorization: `Bearer ${token}`,
        },
@@ -72,7 +72,7 @@ export  async function UpdateController(url:string,data:object) {
 export  async function UpdateCont(url:string,data:object,token:string) {
 
   try {
-  const resp=await axios.post(`https://zylerbackend.onrender.com/api/${url}`,data,{
+  const resp=await axios.post(`${BASEURL+url}`,data,{
     headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -96,7 +96,7 @@ export  async function UpdateCont(url:string,data:object,token:string) {
 
 export  async function DeleteController(token:string,url:string,data:{id: number | string, name: string}[]) {
  
-  const Resp=await axios.post(`https://zylerbackend.onrender.com/api/${url}`,{data},{
+  const Resp=await axios.post(`${BASEURL+url}`,{data},{
    headers: {
        Authorization: `Bearer ${token}`,
      },
@@ -112,7 +112,7 @@ export  async function DeleteController(token:string,url:string,data:{id: number
 
 export  async function GetUserController(url:string,data:number) {
  
-  const Resp=await axios.get(`https://zylerbackend.onrender.com/api/${url}/${data}`)
+  const Resp=await axios.get(`${BASEURL+url}/${data}`)
  return Resp;
 
 }

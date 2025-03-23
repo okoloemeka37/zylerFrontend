@@ -67,7 +67,7 @@ export default function Checkout() {
 
   useEffect(() => {
     if (!token||!userCred) {
-      router.push("http://localhost:3000/auth/Login")
+      router.push("https://zylerfrontend.onrender.com/auth/Login")
   }
   }, [token,router,userCred])
   
