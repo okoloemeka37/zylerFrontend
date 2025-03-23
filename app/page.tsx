@@ -7,7 +7,6 @@ import { Indexcat } from '@/app/actions/Product'
 import Footer from './component/Footer';
 
 import Main from './component/Main';
-import { requestNotificationPermission } from './Mis/Ask';
 import Link from 'next/link';
 
 
@@ -53,7 +52,7 @@ export default function Home() {
 
 
 <div className="min-h-screen bg-gray-50 py-12 px-6">
-<button onClick={requestNotificationPermission}>Enable Notifications</button>
+
 
 <section className="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white h-screen flex items-center">
     <div className="absolute inset-0 bg-black opacity-50"></div>
@@ -68,7 +67,7 @@ export default function Home() {
       <a className="inline-block bg-pink-500 text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-pink-600 transition duration-300">
         Shop Now
       </a>
-      <Link className="inline-block bg-transparent border-2 border-white text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-white hover:text-indigo-600 transition duration-300" href="/Categories"> 
+      <Link className="inline-block bg-transparent border-2 border-white text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-white hover:text-indigo-600 transition duration-300" href="/"> 
         View Collections
       </Link>
     </div>
