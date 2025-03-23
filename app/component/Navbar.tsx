@@ -9,7 +9,9 @@ import "../../styles/nav.css"
 import Link from 'next/link';
 import ButtonLoaders from './Loaders';
 import Image from 'next/image';
+import { FaSun, FaMoon } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
+
 
 export default function Navbar() {
   const route = useRouter()
@@ -20,13 +22,34 @@ export default function Navbar() {
     name: string;
   }
 
+
+
   const [Live, setLive] = useState<Product[]>([]);
   const [showLive, setshowLive] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const liveSearchRef = useRef<HTMLUListElement>(null);
   const [cartNum, setcartNum] = useState(0)
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme === 'dark') {
+      setDarkMode(true);
+      document.documentElement.classList.add('dark');
+    }
+  }, []);
 
 
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    if (!darkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  };
 
 
 
@@ -92,7 +115,7 @@ export default function Navbar() {
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
-                  <Image src={userCred.image !== '' ? `https:\/\/raw.githubusercontent.com\/okoloemeka37\/ImageHolder\/main\/uploads\/` + userCred.image : 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'} alt="User avatar" width={40} height={40} />
+                  <img src={userCred.image !== '' ? `https:\/\/raw.githubusercontent.com\/okoloemeka37\/ImageHolder\/main\/uploads\/` + userCred.image : 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'} alt="User avatar" width={40} height={40} />
                 </div>
               </div>
               <ul
@@ -120,6 +143,11 @@ export default function Navbar() {
               Login
             </Link>
           )}
+        </div>
+        <div>
+        <button onClick={toggleDarkMode} className="p-2 bg-gray-200 dark:bg-gray-700 rounded-full">
+          {darkMode ? <FaSun size={24} /> : <FaMoon size={24} />}
+        </button>
         </div>
       </div>
 

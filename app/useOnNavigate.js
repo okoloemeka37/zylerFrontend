@@ -36,7 +36,7 @@ export function useOnNavigate() {
     const sw = navigator.serviceWorker;
     sw?.addEventListener("message", onMessage);
 
-    const onClick = (e) => {
+    const onClick = () => {
       clickTime = Date.now();
       pathWhenClicked = location.pathname;
     };
@@ -56,7 +56,7 @@ function toURL(url) {
   try {
     if (url) return new URL(url);
     console.log(url)
-  } catch (e) {}
+  } catch (e) {console.log(e)}
   return null;
 }
 

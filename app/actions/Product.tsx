@@ -1,5 +1,5 @@
 import axios from 'axios';
-const BASEURL='http://localhost:8000/api/';
+const BASEURL='https://zylerbackend.onrender.com/api/';
 
 export default async function GetProduct(url:string,token:string) {
   
@@ -60,7 +60,7 @@ export async function single(url:string,token:string) {
 export async function AddProductFunc(url:string,token:string,data:object) {
     try {
   
-        const resp=await axios.post(`http://localhost:8000/api/${url}`,data,{
+        const resp=await axios.post(`https://zylerbackend.onrender.com/api/${url}`,data,{
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',

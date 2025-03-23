@@ -1,6 +1,6 @@
 'use client'
  import React, { useEffect, useState } from 'react'
- import Image from 'next/image'
+
 
 import { Indexcat } from '@/app/actions/Product'
 
@@ -8,6 +8,8 @@ import Footer from './component/Footer';
 
 import Main from './component/Main';
 import { requestNotificationPermission } from './Mis/Ask';
+import Link from 'next/link';
+
 
 
 
@@ -66,9 +68,9 @@ export default function Home() {
       <a className="inline-block bg-pink-500 text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-pink-600 transition duration-300">
         Shop Now
       </a>
-      <a  className="inline-block bg-transparent border-2 border-white text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-white hover:text-indigo-600 transition duration-300">
+      <Link className="inline-block bg-transparent border-2 border-white text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-white hover:text-indigo-600 transition duration-300" href="/Categories"> 
         View Collections
-      </a>
+      </Link>
     </div>
   </div>
 </section>

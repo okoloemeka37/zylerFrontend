@@ -50,7 +50,7 @@ useEffect(() => {
 
 const delCart=async (id:number)=>{
   setIsLoaded(true)
-const resp = await DeleteProduct(`delCart/${id}`, token) as { result: { cart: { id: string, name: string, price: number, stock: number, cart: { stock: number }[], category: string, tag: string, gender: string, Description: string, image: string }[], user:  { name: string; email: string; status: string; id: string; carts: []; orders: []; phone: string; address: string,image:string } } };
+const resp = await DeleteProduct(`delCart/${id}`, token) as { result: { cart: { id: string, name: string, price: number, stock: number, cart: { stock: number }[], category: string, tag: string, gender: string, Description: string, image: string }[], user:  { name: string; email: string; status: string; id: string; carts: []; orders: []; phone: string; address: string; image: string; created_at: string } } };
 console.log(resp.result.cart);
 
  

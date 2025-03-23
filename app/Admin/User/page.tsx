@@ -10,7 +10,7 @@ const UsersPage = () => {
     
     const [users, setusers] = useState([{'name':'','email':'','phone':'','created_at':'','id':0}])
   const [searchTerm, setSearchTerm] = useState("");
-  const [check,setCheck]=useState([]);
+  const [check, setCheck] = useState<{ id: string; name: string }[]>([]);
   const [message,setMessage]=useState('');
 const [isDelModalOpen,setisDelModal]=useState(false);
 const [isDeleted, setisDeleted] = useState(false)
@@ -37,7 +37,7 @@ const filteredUsers = users.filter((user) =>
     setisDelModal(false)
   };
 
-  const close=useRef(null)
+  const close = useRef<HTMLDivElement>(null)
 
   const DeleteUser=async()=>{
     setisDeleted(true)
@@ -48,13 +48,17 @@ const resp=await DeleteController(token,"DeleteUser",check)
 if (resp.data.status==200) {
   setisDelModal(false)
   setusers(resp?.data.user);
-  close.current.style.display="block"
+  if (close.current) {
+    close.current.style.display="block";
+  }
   setMessage(resp?.data.message)
   setCheck([])
   setisDeleted(false)
    setTimeout(() => {
-   
-  close.current.style.display="none"
+   if (close.current) {
+     close.current.style.display="none"
+   }
+ 
   }, 5000); 
 }
   };
@@ -71,10 +75,10 @@ if (resp.data.status==200) {
     const btn=document.querySelectorAll("input[type=checkbox]");
     btn.forEach((box)=>{
       box.addEventListener('change',()=>{
-        const userName=box.getAttribute('gh')
-        const userId=box.getAttribute('gi')
-        if (box.checked) {
-          setCheck([...check,{id:userId,name:userName}])
+        const userName=box.getAttribute('data-gh')
+        const userId=box.getAttribute('data-gi') || ''
+        if ((box as HTMLInputElement).checked) {
+          setCheck([...check,{id:userId,name:userName || ''}])
         }else{
          
           const filteredUsers = check.filter(user => user.id !== userId);
@@ -132,7 +136,7 @@ if (resp.data.status==200) {
                     key={user.id}
                     className="border-b hover:bg-gray-100 transition duration-300"
                   >
-                    <td className="px-6 py-3"><input type="checkbox" gh={user.name} gi={user.id} onChange={()=>{gn()}} className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" />
+                    <td className="px-6 py-3"><input type="checkbox" data-gh={user.name} data-gi={user.id} onChange={()=>{gn()}} className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" />
                     </td>
                     <td className="px-6 py-3"><Link href="">{user.name}</Link></td>
                     <td className="px-6 py-3">{user.email}</td>
@@ -172,7 +176,7 @@ if (resp.data.status==200) {
         Confirm Delete
       </h2>
       <p className="mt-2 text-gray-600">
-        Are you sure you want to delete <b>{check.map((val)=>(<span>{val.name+','}</span>))}</b>?
+        Are you sure you want to delete <b>{check.map((val, index) => (<span key={index}>{val.name + ','}</span>))}</b>?
       </p>
       <div className="mt-4 flex justify-end space-x-2">
         <button

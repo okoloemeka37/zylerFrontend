@@ -41,7 +41,7 @@ export const Change: React.FC<ChangeProps> = ({ e, setFiles, setimage }) => {
 };
 
 
-export const Addfield = (morefields,type:string) => {
+export const Addfield = (morefields: React.RefObject<HTMLDivElement>,type:string) => {
 
     const df=document.createElement("div");
 
@@ -58,7 +58,11 @@ df.appendChild(fieldName);
     const cancel=document.createElement("span");
 cancel.innerHTML="X";
 cancel.className="cursor-pointer text-red-500 mt-2";
-cancel.onclick=()=>morefields.current.removeChild(nm);
+cancel.onclick=() => {
+    if (morefields.current) {
+        morefields.current.removeChild(nm);
+    }
+};
 
 const gh=document.createElement('div');
 gh.appendChild(val);

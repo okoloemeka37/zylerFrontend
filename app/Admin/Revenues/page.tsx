@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { exportToCSV, exportToPDF } from '@/utils/exportUtils';
 import React from 'react';
 import { useAuth } from '@/app/context/AuthContext';

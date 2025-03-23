@@ -1,16 +1,21 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { AddProductFunc, catRelated, singleIndex } from '../../actions/Product';
+import {catRelated, singleIndex } from '../../actions/Product';
 import "../../../styles/body.css"
-import Link from 'next/link';
+
 import { ProCard } from '@/app/component/Cards';
 import { SingleProduct } from '@/app/component/ContentLoader';
-import { useAuth } from '@/app/context/AuthContext';
-import { useRouter } from 'next/navigation';
+//import { useAuth } from '@/app/context/AuthContext';
+
+
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 
 import ImageHelper from '@/app/component/ImageHelper';
-import ButtonLoaders from '@/app/component/Loaders';
+
+import SellerProfile from '@/app/component/SellerComp';
+import ActBtn from '@/app/component/ActBtn';
+import { GetUserController } from '@/app/actions/Auth';
+import { FaStar } from 'react-icons/fa';
 
 
 interface Params {
@@ -52,17 +57,17 @@ function highlights(dat:{ 'id': number,'Description':string, 'name': string, 'pr
   );
 }
 export default function SHOW({ params }: PageProps) {
-  const router = useRouter()
-  const { token, userCred, BASE_URL, User } = useAuth()
+  //const router = useRouter()
+//  const { token } = useAuth()
   const [isLoad, setisLoad] = useState(false);
   const [Incart, setIncart] = useState('Add To Cart')
-  const [data, setData] = useState({ 'id': 0, 'name': "", 'price': 1, 'stock': 1, 'image': '', 'category': "", 'tag': "", 'gender': "", 'Description': "", 'dynamicField': "" });
+  const [data, setData] = useState({ 'id': 0,'user_id':0, 'name': "", 'price': 1, 'stock': 1, 'image': '', 'category': "", 'tag': "", 'gender': "", 'Description': "", 'dynamicField': "" });
   const [Related, setRelated] = useState([{ 'id': 0, 'name': "", 'price': 1, 'stock': 1, 'category': "", 'tag': "", 'gender': "", 'Description': "", 'image':''}]);
   const [chosenStock, setchosenStock] = useState('1');
   const [image, setImage] = useState<string[]>([]);
   const [count, setCount] = useState(0);
+  const [review, setreview] = useState([ { id: 0, name: "", user_id: 0, cus_id: 0, rating: 0, comment: "", image: "" },]);
 
-  const [isLoaded, setisLoaded] = useState(false)
 
    const [PageLoading, setPageLoading] = useState(true)  
     useEffect(() => {
@@ -92,45 +97,24 @@ export default function SHOW({ params }: PageProps) {
         const images = res?.result.data[0].image;
         setImage(images.split(','));
       }
+      fetchSellerData(Number(resolvedParams.ProductView));
     }
+       async function fetchSellerData(id:number) {
+      try {
+        const resp = await GetUserController(`getSellers`,id);
+      
+        setreview(resp.data.review);
+        console.log(resp.data.review)
+        } catch (error) {
+        console.error("Error fetching seller data:", error);
+      }
+    }
+  
     unwrapParams();
   }, [])
 
-  const AddToCart = async () => {
-    setisLoaded(true)
-    if (token) {
-      const prepData = {
-        'user_id': userCred!.id,
-        'stock': chosenStock,
-        'product_id': data.id
-      }
-      const resp = await AddProductFunc('AddCart', token, prepData);
-      if (resp?.result.message) {
-        setisLoaded(false)
-        setIncart('In Cart');
-        User(resp?.result.user)
-        router.push(BASE_URL + "Products/Cart");
-      }
-    }
-  }
+ 
 
-  useEffect(() => {
-    if (userCred.id !=='') {
-    if (data.id !== 0) {
-      setTimeout(() => {
-        async function wish() {
-          console.log(userCred)
-          const sending = {
-            'user_id': Number(userCred!.id),
-            'product_id': data.id
-          }
-          await AddProductFunc('addWish', token, sending)
-        }
-        wish();
-      }, 10000);
-    }
-  }
-  }, [data.id,token,userCred]);
 
   const [cCount, setcCount] = useState(1)
 
@@ -249,18 +233,12 @@ export default function SHOW({ params }: PageProps) {
     </div>
   </div>
 </div>
- 
-              
-                <div className="flex space-x-4 justify-between">
-                  <div className='w-full'><button className="flex-1 w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-200">
-                    {token ? ('Buy') : ( <Link href="/auth/Login">Buy</Link> )}
-                  </button></div>
-                        <div className='w-full'> {!isLoaded?(  <button className="flex-1 w-full bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition duration-200" onClick={AddToCart}>
-                    {token ? Incart : (<Link href="/auth/Login">Add To Cart</Link>)}
-                  </button>):(<ButtonLoaders ty={'change'} />)}</div>
 
-                 
+                <div>
+                  <ActBtn data={data} chosenStock={chosenStock} cart={Incart} />
                 </div>
+
+
               </div>
             </div>
 
@@ -277,25 +255,28 @@ export default function SHOW({ params }: PageProps) {
                 <h3 className="text-xl font-bold text-gray-800 mb-4">
                   Customer Reviews
                 </h3>
-                <div className="flex items-start mb-4 border-b pb-4">
-                  <div className="text-yellow-400 mr-2">★★★★☆</div>
+                {review.map((val,index)=>{
+                  return(
+                  <div className="flex items-start mb-4 border-b pb-4" key={index}>
+                  <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar key={i} className={`text-${i < val.rating ? "yellow" : "gray"}-500`} />
+                  ))}
+             
+                </div> 
                   <div className="flex-1">
-                    <h4 className="font-semibold text-gray-800">John Doe</h4>
+                    <h4 className="font-semibold text-gray-800">{val.name}</h4>
                     <p className="text-gray-600 text-sm">
-                      This product is amazing! The quality exceeded my expectations.
+                      {val.comment}
                     </p>
                   </div>
+                  
                 </div>
-                <div className="flex items-start mb-4 border-b pb-4">
-                  <div className="text-yellow-400 mr-2">★★★★★</div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-800">Jane Smith</h4>
-                    <p className="text-gray-600 text-sm">
-                      Perfect fit and super comfortable. Highly recommended!
-                    </p>
-                  </div>
-                </div>
+                  )
+                })}
               </div>
+
+              <div><SellerProfile id={data.user_id}/></div>
             </div>
           </div>
         )}
