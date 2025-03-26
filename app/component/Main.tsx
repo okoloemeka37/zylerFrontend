@@ -58,7 +58,7 @@ export default function Main({ Product }: MainProps) {
               {key === "Latest Products" ? (
                 <span onClick={() => { setshowitem(Product); setTitle(key) }}>{key}</span>
               ) : (
-                <span>{key}</span>
+                <span className='text-black'>{key}</span>
               )}
               <svg
                 className="w-4 h-4 transform group-hover:rotate-180 transition-transform"
@@ -76,7 +76,7 @@ export default function Main({ Product }: MainProps) {
               </svg>
             </button>
             {/* Dropdown */}
-            <div className="absolute top-0 left-full z-10 hidden w-48 py-2 mt-2 bg-white border border-gray-300 rounded-md shadow-lg group-hover:block">
+            <div className="absolute top-0 lg:left-full z-10 hidden w-48 py-2 mt-2 bg-white border border-gray-300 rounded-md shadow-lg group-hover:block">
               {cats[key].map((option, index) => (
                 <p key={index} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={() => changeTip(option, key)}>
                   {option}
