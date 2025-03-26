@@ -1,5 +1,7 @@
 import axios from "axios";
-const BASEURL='http://127.0.0.1:8000/api/';
+//const BASEURL='http://127.0.0.1:8000/api/';
+const BASEURL='https://zylerbackend.onrender.com/api/';
+
 export async function AddReview(url:string,token:string,data:object) {
     try {
   
