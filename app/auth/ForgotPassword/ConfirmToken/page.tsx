@@ -18,7 +18,9 @@ const TokenConfirmation = () => {
 if (token) {
  
     if (userCred && 'status' in userCred) {
-      router.push(BASE_URL + (userCred as { status: string }).status + "/Profile");
+
+        router.push(BASE_URL+userCred!.status+"/Dashboard")
+    
     }
  
 }

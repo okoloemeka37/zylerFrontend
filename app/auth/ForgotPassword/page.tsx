@@ -10,8 +10,9 @@ const ForgotPassword = () => {
   const router=useRouter();
   const {token,BASE_URL,userCred}=useAuth();
 if (token) {
-
- router.push(BASE_URL+(userCred as { status: string }).status +"/Profile")
+  
+    router.push(BASE_URL+userCred!.status+"/Dashboard")
+  
 }
 
 const [Errors, setErrors] = useState({'email':''});

@@ -5,19 +5,20 @@ import { useRouter  } from 'next/navigation'
 
 
 
+
 const AuthContext=createContext<{
     isAuthenticated: boolean;
-    login: (token: string, data: { name: string; email: string; status: string; id: string; carts: []; orders: []; phone: string; address: string,image:string,created_at:string }) => void;
+    login: (token: string, data: { name: string; email: string; status: 'Admin' | 'Seller' | string; id: string;  review:[];products:[]; carts: []; orders: []; phone: string; address: string,image:string,created_at:string }) => void;
     logout: () => void;
-userCred: {name: string, email: string, status: string, id: string, carts: [], orders: [], phone: string, address: string,image:string,created_at:string}; 
+userCred: {name: string, email: string, status: string, id: string, carts: [], orders: [], review:[],products:[], phone: string, address: string,image:string,created_at:string}; 
     token: string;
     BASE_URL: string;
-    User: (data: { name: string, email: string, status: string, id: string, carts: [], orders: [], phone: string, address: string,image:string,created_at:string }) => void;
+    User: (data: { name: string, email: string, status: string, id: string, carts: [], orders: [],  review:[],products:[], phone: string, address: string,image:string,created_at:string }) => void;
 }>({
     isAuthenticated: false,
     login: () => {},
     logout: () => {},
-    userCred: {name: '', email: '', status: '', id: '', carts: [], orders: [], phone: '', address: '',image:'',created_at:''},
+    userCred: {name: '', email: '', status: '', id: '', carts: [], orders: [], review:[],products:[], phone: '', address: '',image:'',created_at:''},
     token: '',
     BASE_URL: "",
     User: () => {}
@@ -26,9 +27,9 @@ userCred: {name: string, email: string, status: string, id: string, carts: [], o
 export function AuthProvider({ children }:{children:React.ReactNode}) {
     const router=useRouter();
     const [isAuthenticated, setAuthenticated] = useState(false);
-    const [userCred, setuserCred] = useState<{name: string, email: string, status: string, id: string, carts: [], orders: [], phone: string, address: string,image:string,created_at:string}>({name:'',email:'',status:'',id:'',carts:[],orders:[],phone:'', address:'',image:'',created_at:''});
+    const [userCred, setuserCred] = useState<{name: string, email: string, status: string, id: string, review:[],products:[], carts: [], orders: [], phone: string, address: string,image:string,created_at:string}>({name:'',email:'',status:'',id:'',carts:[],orders:[] , review:[],products:[],phone:'', address:'',image:'',created_at:''});
     const [token, setToken] = useState<string>('')
-    const [BASE_URL] = useState('https://zylerfrontend.onrender.com/')
+    const [BASE_URL] = useState('http://localhost:3000/')
 
     useEffect(() => {
       const token=localStorage.getItem("Token")!;
@@ -41,7 +42,7 @@ export function AuthProvider({ children }:{children:React.ReactNode}) {
      
     }, [])
 
-    const login=(token:string, data: { name: string, email: string, status: string, id: string, carts:[], orders:[], phone: string, address: string,image:string,created_at:string })=>{
+    const login=(token:string, data: { name: string, email: string, status: 'Admin' | 'Seller' | string, id: string, review:[], products:[], carts:[], orders:[], phone: string, address: string,image:string,created_at:string })=>{
 localStorage.setItem('Token',token);
 localStorage.setItem("user",JSON.stringify(data));
 setAuthenticated(true);
@@ -51,7 +52,7 @@ setToken(token);
 if (data['status']!== "Admin") {
     router.push(`${BASE_URL}user/Profile`)
 }else{
-    router.push(`${BASE_URL}Admin/Profile`)
+    router.push(`${BASE_URL+data.status}+/Dashboard`)
 }
     }
 
@@ -60,10 +61,10 @@ if (data['status']!== "Admin") {
         localStorage.removeItem('user');
         setAuthenticated(false);
         setToken('');
-        setuserCred({name:'',email:'',status:'',id:'',carts:[],orders:[],phone:'', address:'',image:'string',created_at:''});
+        setuserCred({name:'',email:'',status:'',id:'',carts:[],orders:[], review:[],products:[],phone:'', address:'',image:'string',created_at:''});
 
     }
-    const  User=(data:{name: string, email: string, status: string, id: string, carts: [], orders: [], phone: string, address: string,image:string,created_at:string})=> {
+    const  User=(data:{name: string, email: string, status: string, id: string, carts: [], orders: [], review:[],products:[], phone: string, address: string,image:string,created_at:string})=> {
         localStorage.setItem("user",JSON.stringify(data));
         setuserCred(data);
     }

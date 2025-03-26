@@ -51,6 +51,7 @@ export default function SellerProfile({ id }: SellerProfileProps) {
     website: "",
     review: [],
     socialMedia: { facebook: "", twitter: "", instagram: "" },
+ 
   });
   const [review, setreview] = useState<Review[]>([
     { id: 0, name: "", user_id: 0, cus_id: 0, rating: 0, comment: "", image: "" },

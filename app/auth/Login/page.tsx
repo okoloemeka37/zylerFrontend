@@ -19,8 +19,10 @@ export default function Login() {
   const router=useRouter();
    const {login,token,BASE_URL,userCred}=useAuth();
 if (token) {
+ 
+    router.push(BASE_URL+userCred!.status+"/Dashboard")
+
   
-  router.push(BASE_URL+userCred!.status+"/Profile")
 }
 
   const [isLoaded, setisLoaded] = useState(false)

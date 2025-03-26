@@ -51,7 +51,7 @@ export  async function LogoutController(token:string) {
 export  async function UpdateController(url:string,data:object) {
  
   try {
-  const resp=await axios.put(`https://zylerbackend.onrender.com/api/${url}`,data)
+  const resp=await axios.put(`${BASEURL+url}`,data)
  return {status:200,'result':resp};
 }
  catch (error:unknown) {

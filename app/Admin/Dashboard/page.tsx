@@ -7,20 +7,19 @@ import {cat, single } from '@/app/actions/Product';
 
 export default function Profile() {
  const router=useRouter()
-const {token,userCred}=useAuth();
+const {token,BASE_URL}=useAuth();
 const [product, setproduct] = useState({'id':0})
 const [user, setuser] = useState({'id':0})
 const [order, setorder] = useState({'order_id':0})
 const [noti, setnoti] = useState([{'notice':'','type_id':0,'id':0}])
 const [revenue,setRevenue]=useState<number>();
 
-useEffect(() => {
-  if (!token) {
-    router.push("http://localhost:3000/auth/Login")
-}
-}, [token,router,userCred])
-
-
+  useEffect(() => {
+    if (!token) {
+      router.push(BASE_URL+"/auth/Login")
+  }
+  }, [token,router,BASE_URL])
+  
 useEffect(() => {
  async function getsum() {
   const resp=await cat('getSum',token);
@@ -49,7 +48,7 @@ if (typeof location !== 'undefined') {
     </header>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {/* Card for Total Products */}
-      <Link href="../Admin/Product">
+      <Link href={BASE_URL+"Product"}>
       <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
     
         <div className="mr-4 p-3 bg-blue-100 rounded-full">
@@ -77,7 +76,7 @@ if (typeof location !== 'undefined') {
       </div>
         </Link>
   
-      <Link href="../Admin/Product/OrdersView">
+      <Link href={BASE_URL+"Product/OrdersView"}>
       <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
       
         <div className="mr-4 p-3 bg-green-100 rounded-full">

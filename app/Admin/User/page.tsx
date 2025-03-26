@@ -5,8 +5,21 @@ import { single } from '@/app/actions/Product';
 import { DeleteController } from '@/app/actions/Auth';
 import ButtonLoaders from "@/app/component/Loaders";
 import Link from 'next/link'
-const UsersPage = () => {
-    const {token,userCred}=useAuth()
+import { useRouter } from "next/navigation";
+const UsersPage = () => { 
+  const router=useRouter();
+    const {token,userCred,BASE_URL}=useAuth()
+   
+useEffect(() => {
+
+  if(token ===''){
+router.push(BASE_URL+'/auth/Login')
+  }
+
+}, [token,BASE_URL,router])
+
+
+
     
     const [users, setusers] = useState([{'name':'','email':'','phone':'','created_at':'','id':0}])
   const [searchTerm, setSearchTerm] = useState("");

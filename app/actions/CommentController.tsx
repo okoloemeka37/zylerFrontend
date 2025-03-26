@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASEURL='https://zylerbackend.onrender.com/api/';
+const BASEURL='http://127.0.0.1:8000/api/';
 export async function AddReview(url:string,token:string,data:object) {
     try {
   
@@ -56,7 +56,7 @@ export async function EditReviewAndRating(url:string,token:string,data:object) {
 
 export  async function DeleteReviewController(token:string,url:string,data:{id: number|string}) {
  
-  const Resp=await axios.post(`https://zylerbackend.onrender.com/api/${url}`,data,{
+  const Resp=await axios.post(`${BASEURL+url}`,data,{
    headers: {
        Authorization: `Bearer ${token}`,
      },

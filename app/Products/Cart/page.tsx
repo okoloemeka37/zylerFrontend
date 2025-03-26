@@ -11,7 +11,7 @@ import ImageHelper from '@/app/component/ImageHelper';
 
 export default function Cart() {
  const router= useRouter()
- const {token,userCred,User}= useAuth()
+ const {token,userCred,User,BASE_URL}= useAuth()
 const [data, setData] = useState([{ id: '', name: '', price: 1, stock: 1, cart: [{ stock: 1 }], category: '', tag: '', gender: '', Description: '', image: '' }]);
 const [IsLoaded, setIsLoaded] = useState(false);
  const [PageLoading, setPageLoading] = useState(true)  
@@ -23,11 +23,12 @@ const [IsLoaded, setIsLoaded] = useState(false);
     }
   }, [])
 
- useEffect(() => {
-  if (!token||!userCred) {
-    router.push("https://zylerfrontend.onrender.com/auth/Login")
-}
-}, [token,router,userCred])
+  useEffect(() => {
+    if (!token||!userCred) {
+      router.push(BASE_URL+"/auth/Login")
+  }
+  }, [token,router,userCred,BASE_URL])
+  
 
 
 
@@ -50,7 +51,7 @@ useEffect(() => {
 
 const delCart=async (id:number)=>{
   setIsLoaded(true)
-const resp = await DeleteProduct(`delCart/${id}`, token) as { result: { cart: { id: string, name: string, price: number, stock: number, cart: { stock: number }[], category: string, tag: string, gender: string, Description: string, image: string }[], user:  { name: string; email: string; status: string; id: string; carts: []; orders: []; phone: string; address: string; image: string; created_at: string } } };
+const resp = await DeleteProduct(`delCart/${id}`, token) 
 console.log(resp.result.cart);
 
  

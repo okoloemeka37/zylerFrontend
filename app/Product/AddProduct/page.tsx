@@ -1,12 +1,13 @@
 "use client"
+import { useEffect, useState,useRef } from "react"
 import { AddProductFunc } from "@/app/actions/Product"
 import {useRouter } from "next/navigation";
 
-import { useEffect, useState,useRef } from "react"
-import "../../../../styles/body.css"
+import "../../../styles/body.css"
 
 import ButtonLoaders from "@/app/component/Loaders";
 import fakeClick, { Addfield, Change, Render } from "@/app/component/Funcs";
+import { useAuth } from "@/app/context/AuthContext";
 
 
 interface Data{
@@ -30,8 +31,15 @@ const cats: { [key: string]: string[] } = {
 }
 const removed: number[] = [];
 export default function AddProduct() {
+const router=useRouter();
+const {userCred,token,BASE_URL}=useAuth();
 
-
+  useEffect(() => {
+    if (token=='') {
+      router.push(BASE_URL+"/auth/Login")
+  }
+  }, [token,router,BASE_URL])
+  
   const [selectedFiles, setFiles] = useState<string[]>([]);
 
   const remove = (index: number) => {
@@ -44,14 +52,8 @@ export default function AddProduct() {
 
 
 
-const router=useRouter();
 
-     const [token, settoken] = useState('');
-  useEffect(() => {
 
-  settoken(localStorage.getItem("Token")!);
-  }, [])
-  
 
 const [tTS, settTS] = useState(["T-shirts","Shirts","Blouses","Sweaters","Hoodies"])
 
@@ -136,6 +138,7 @@ formData.append('category',data['category']);
 formData.append('tag',data['tag']);
 formData.append('gender',data['gender']);
 formData.append('Description',data['Description']);
+formData.append('user_id',userCred.id)
 if(Object.keys(dynObj).length > 0) formData.append('dynamicField', JSON.stringify(dynObj));
 
 
@@ -163,7 +166,7 @@ const resp=await AddProductFunc(`AddProduct`,token,formData);
  
  
  if (resp?.status===200) {
-  router.push("../../../Admin/Product")
+  router.push(BASE_URL+userCred.status+"/Dashboard")
   
       setisLoaded(false)
   

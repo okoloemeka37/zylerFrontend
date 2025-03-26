@@ -67,9 +67,9 @@ export default function Checkout() {
 
   useEffect(() => {
     if (!token||!userCred) {
-      router.push("https://zylerfrontend.onrender.com/auth/Login")
+      router.push(BASE_URL+"/auth/Login")
   }
-  }, [token,router,userCred])
+  }, [token,router,userCred,BASE_URL])
   
 
   const selectRef = useRef<HTMLSelectElement>(null);

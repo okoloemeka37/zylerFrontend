@@ -23,7 +23,9 @@ export default function Register() {
   const {login,token,BASE_URL,userCred}=useAuth();
 
   if (token) {
-    router.push(BASE_URL+userCred!.status+"/Profile")
+    
+      router.push(BASE_URL+userCred!.status+"/Dashboard")
+
   }
 
   
