@@ -3,17 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title><style>
-        h2{
-            text-align: center;
+    <title>Bubble Pop Game</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #222; color: white; overflow: hidden; }
+        #game-container { width: 100vw; height: 100vh; position: relative; }
+        .bubble {
+            width: 50px;
+            height: 50px;
+            
+            border-radius: 50%;
+            position: absolute;
+            cursor: pointer;
+            animation: rise 5s linear infinite;
+        }
+        .Bigbubble {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            position: absolute;
+            cursor: pointer;
+            animation: rise 2.5s linear infinite;
+        }
+        @keyframes rise {
+            from { transform: translateY(100vh); opacity: 1; }
+            to { transform: translateY(-10vh); opacity: 0; }
+        }
+        #scoreboard { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); font-size: 20px; }
+    
+        #message {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: color 0.5s;
         }
     </style>
 </head>
 <body>
-    <h2> daily manual </h2>
-    <hr/>
-    <em> 
-        <p>today we would be talkimg abouth something new and its abouth our day to day life activity </p>
-    </em>
+    <div id="game-container">
+        <div id="message"></div>
+        <div id="scoreboard">Score: <span id="score">0</span></div>
+    </div>
+
+    <script>
+      const themes = [
+            { background: "#1B1B1B", bubble: "#00BFFF", message: "Pop them before they take over!" }, // Dark Gray & Neon Blue
+            { background: "#0A192F", bubble: "#FFD700", message: "Gold bubbles? You must be rich!" }, // Dark Navy & Gold
+            { background: "#004D40", bubble: "#C0C0C0", message: "Midnight bubbles... mysterious!" }, // Midnight Green & Silver
+            { background: "#2E1A47", bubble: "#FFBF00", message: "Bubbles from another galaxy!" }, // Royal Purple & Amber
+            { background: "#000000", bubble: "#FFFFFF", message: "Black & white? Classic and classy!" }, // Black & White
+            { background: "#005F56", bubble: "#40E0D0", message: "Teal bubbles? Are we underwater?" }, // Dark Teal & Cyan
+            { background: "#2C3E50", bubble: "#AED6F1", message: "Blue bubbles—stay cool, stay sharp!" }, // Steel Blue & Light Blue
+            { background: "#4E342E", bubble: "#D7CCC8", message: "Brown theme? Looks like coffee bubbles!" }, // Dark Walnut & Beige
+            { background: "#3A3F44", bubble: "#50C878", message: "Green bubbles? Nature approves!" }, // Slate Gray & Emerald Green
+            { background: "#121212", bubble: "#FFD700", message: "Night mode activated! Pop away!" }  // Obsidian Night & Glowing Yellow
+        ];
+
+        let startBack='#ff5733'
+        const gameContainer = document.getElementById("game-container");
+        const scoreDisplay = document.getElementById("score");
+        let score = 0;
+        let count=0;
+        function createBubble() { 
+              const bubble = document.createElement("div");
+            bubble.classList.add("bubble");
+            bubble.style.backgroundColor= startBack;
+          console.log(startBack)
+           if (count == 10) { 
+           const fg=Math.random()*2000+2000;
+            count=0;
+           console.log(fg)
+                setTimeout(() => {
+                    createBigBubble();
+                    
+                },fg );
+            }
+
+           
+
+            const x = Math.random() * (window.innerWidth - 50);
+            bubble.style.left = `${x}px`;
+
+            bubble.addEventListener("click", () => {
+                if (bubble.getAttribute('size') !== undefined && bubble.getAttribute('size')==100) {
+                    score+=10;
+                    
+                }else{ score++;}
+               
+                scoreDisplay.textContent = score;
+                bubble.remove();
+               
+            });
+
+            gameContainer.appendChild(bubble);
+
+            setTimeout(() => {
+                if (bubble.parentElement) bubble.remove();
+            }, 5000);
+        }
+
+        setInterval(()=>{
+            createBubble();
+            if (count < 10) {
+                count++;
+            }
+        }, 1000);
+
+        function createBigBubble() { 
+            const rand=Math.random()*themes.length;
+            const theme = themes[Math.floor(rand)];
+          
+              const bubble = document.createElement("div");
+
+              bubble.style.background=theme.background
+            bubble.classList.add("Bigbubble");
+
+
+                bubble.setAttribute('size',100)
+                bubble.style.width=100+'px'
+                bubble.style.height=100+'px'
+                console.log(bubble);
+
+            const x = Math.random() * (window.innerWidth - 40);
+            bubble.style.left = `${x}px`;
+
+            bubble.addEventListener("click", () => {
+                    score+=10;
+              
+                document.querySelector("body").style.backgroundColor = theme.background;
+
+               startBack=theme.bubble;
+               document.querySelectorAll('.bubble').forEach((bubble) => {
+                bubble.style.backgroundColor=theme.bubble;   
+               })
+               document.getElementById("message").textContent = theme.message;
+                document.getElementById("message").style.color = theme.bubble;
+                scoreDisplay.textContent = score;
+                bubble.remove();
+               
+            });
+
+            gameContainer.appendChild(bubble);
+
+            setTimeout(() => {
+                if (bubble.parentElement) bubble.remove();
+            }, 2500);
+        }
+
+
+       
+    </script>
 </body>
 </html>
+<!-- This HTML file is a simple game where users click on bubbles to score points. The game features different themes with unique colors and messages. The bubbles rise from the bottom of the screen, and players can pop them to increase their score. The game also includes a special big bubble that triggers a theme change when clicked. -->
+<!-- The game is designed to be visually appealing and engaging, with a focus on user interaction and fun. -->
