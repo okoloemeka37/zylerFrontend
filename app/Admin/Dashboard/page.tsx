@@ -7,18 +7,20 @@ import {cat, single } from '@/app/actions/Product';
 
 export default function Profile() {
  const router=useRouter()
-const {token,BASE_URL}=useAuth();
+ const { token, userCred, BASE_URL,setterURL } = useAuth()
 const [product, setproduct] = useState({'id':0})
 const [user, setuser] = useState({'id':0})
 const [order, setorder] = useState({'order_id':0})
 const [noti, setnoti] = useState([{'notice':'','type_id':0,'id':0}])
 const [revenue,setRevenue]=useState<number>();
 
-  useEffect(() => {
-    if (!token) {
-      router.push(BASE_URL+"/auth/Login")
-  }
-  }, [token,router,BASE_URL])
+    useEffect(() => {
+      if (token==='') {
+        setterURL(window.location.href)
+        router.push(BASE_URL+"/auth/Login")
+    }
+    }, [token,router,userCred,BASE_URL,setterURL])
+   
   
 useEffect(() => {
  async function getsum() {

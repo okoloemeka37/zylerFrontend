@@ -7,7 +7,6 @@ import { Indexcat } from '@/app/actions/Product'
 import Footer from './component/Footer';
 
 import Main from './component/Main';
-import Link from 'next/link';
 
 
 
@@ -52,29 +51,29 @@ export default function Home() {
 
 
 <div className="min-h-screen bg-gray-50 py-12 px-6">
+<section className="relative min-h-[85vh] flex items-center justify-center text-white bg-gradient-to-r from-red-500 via-pink-500 to-purple-600">
+      <div className="text-center max-w-2xl px-6">
+        {/* Main Heading */}
+        <h1 className="text-5xl md:text-7xl font-extrabold leading-tight animate-fadeInUp">
+          Upgrade Your <span className="text-yellow-300">Style</span> Today!
+        </h1>
 
+        {/* Subtext */}
+        <p className="text-lg md:text-2xl mt-4 text-gray-200 animate-fadeInUp delay-200">
+          Discover the best fashion, shoes, and accessories, all in one place.
+        </p>
 
-<section className="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white h-screen flex items-center">
-    <div className="absolute inset-0 bg-black opacity-50"></div>
-  <div className="container mx-auto text-center relative z-10 px-4">
-    <h1 className="text-5xl font-extrabold leading-tight mb-6 sm:text-6xl lg:text-7xl">
-      Discover Your Perfect Look
-    </h1>
-    <p className="text-xl mb-8 sm:text-2xl lg:text-3xl">
-      Stay on top of the trends with the latest styles for every occasion.
-    </p>
-    <div className="space-x-4">
-      <a className="inline-block bg-pink-500 text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-pink-600 transition duration-300">
-        Shop Now
-      </a>
-      <Link className="inline-block bg-transparent border-2 border-white text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-white hover:text-indigo-600 transition duration-300" href="/"> 
-        View Collections
-      </Link>
-    </div>
-  </div>
-</section>
-
-
+        {/* CTA Buttons */}
+        <div className="mt-6 flex justify-center gap-4 animate-fadeInUp delay-400">
+          <button className="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-black text-lg font-semibold rounded-lg shadow-lg transition">
+            Shop Now
+          </button>
+          <button className="px-6 py-3 border border-white hover:bg-white hover:text-black text-white text-lg font-semibold rounded-lg transition">
+            Explore Categories
+          </button>
+        </div>
+      </div>
+    </section>
 
 <Main Product={Product}/>
 

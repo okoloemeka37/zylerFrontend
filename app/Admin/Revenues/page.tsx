@@ -7,6 +7,7 @@ import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import GetProduct from '@/app/actions/Product';
 
+
 const demoData = {
   total: 15000,
   daily: 500,
@@ -30,14 +31,15 @@ const demoData = {
 export default function RevenuePage() {
   const [revenueData, setRevenueData] = useState(demoData);
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
-  const { token, userCred } = useAuth();
+  const  { token, userCred, BASE_URL,setterURL } = useAuth()
   const router = useRouter();
 
-  useEffect(() => {
-    if (!token || userCred['status'] !== 'Admin') {
-      router.push("http://localhost:3000/auth/Login");
+    useEffect(() => {
+      if (token==='') {
+        setterURL(window.location.href)
+        router.push(BASE_URL+"/auth/Login")
     }
-  }, [token, router, userCred]);
+    }, [token,router,userCred,BASE_URL,setterURL])
 
   useEffect(() => {
     async function fetchRevenue() {

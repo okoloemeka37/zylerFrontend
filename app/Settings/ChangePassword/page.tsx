@@ -9,10 +9,18 @@ import { useAuth } from '@/app/context/AuthContext'
 
 export default function ChangePassword() {
     const router=useRouter();
-    const {BASE_URL,userCred}=useAuth();
+    const {BASE_URL,userCred,token,setterURL}=useAuth();
 const [data, setdata] = useState({'oldPassword':'','password':'','password_confirmation':'',email:''})
 const [id, setid] = useState('');
 
+useEffect(() => {
+  if (token==='' || userCred.status !=='Seller') {
+    setterURL(window.location.href)
+    router.push(BASE_URL+"auth/Login");
+    
+  
+   }
+}, [token,userCred,BASE_URL,setterURL,router])
 
 useEffect(() => {
  setdata(prev=>({

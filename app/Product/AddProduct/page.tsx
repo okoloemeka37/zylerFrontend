@@ -32,13 +32,13 @@ const cats: { [key: string]: string[] } = {
 const removed: number[] = [];
 export default function AddProduct() {
 const router=useRouter();
-const {userCred,token,BASE_URL}=useAuth();
-
-  useEffect(() => {
-    if (token=='') {
-      router.push(BASE_URL+"/auth/Login")
-  }
-  }, [token,router,BASE_URL])
+const { token, userCred, BASE_URL,setterURL } = useAuth()
+useEffect(() => {
+  if (token==='') {
+    setterURL(window.location.href)
+    router.push(BASE_URL+"/auth/Login")
+}
+}, [token,router,userCred,BASE_URL,setterURL])
   
   const [selectedFiles, setFiles] = useState<string[]>([]);
 
@@ -174,7 +174,15 @@ const resp=await AddProductFunc(`AddProduct`,token,formData);
    if (resp?.status===422) {
      setErrors(resp.error)
      setisLoaded(false)
-   }  
+   } 
+ 
+   if (resp?.status===400) {
+   
+    setErrors(prev=>({
+      ...prev,image:'Image is required'
+    }))
+    setisLoaded(false)
+  }  
 }
 
 
@@ -195,6 +203,7 @@ const morefields=useRef<HTMLDivElement>(null)
         <h3 className="text-xl font-bold text-gray-700 mb-4">
           Product Information
         </h3>
+        <p>{Errors.image}</p>
         <div className="result flex flex-col md:flex-row">{Render({ source: selectedFiles, remove })}</div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6"  ref={morefields}>
           <div>
@@ -229,6 +238,7 @@ const morefields=useRef<HTMLDivElement>(null)
       <div className="absolute left-0 mt-2 w-40 bg-white shadow-lg rounded-md opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all duration-300">
         <span  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={()=>Addfield(morefields,'text')}>Text</span>
         <span  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={()=>Addfield(morefields,'number')}> Number</span>
+        <span  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={()=>Addfield(morefields,'list')}> List</span>
       </div>
     </div>
 

@@ -11,7 +11,7 @@ import ImageHelper from '@/app/component/ImageHelper';
 
 export default function Cart() {
  const router= useRouter()
- const {token,userCred,User,BASE_URL}= useAuth()
+ const {token,userCred,User,BASE_URL,setterURL}= useAuth()
 const [data, setData] = useState([{ id: '', name: '', price: 1, stock: 1, cart: [{ stock: 1 }], category: '', tag: '', gender: '', Description: '', image: '' }]);
 const [IsLoaded, setIsLoaded] = useState(false);
  const [PageLoading, setPageLoading] = useState(true)  
@@ -24,10 +24,11 @@ const [IsLoaded, setIsLoaded] = useState(false);
   }, [])
 
   useEffect(() => {
-    if (!token||!userCred) {
+    if (token==='') {
+      setterURL(window.location.href)
       router.push(BASE_URL+"/auth/Login")
   }
-  }, [token,router,userCred,BASE_URL])
+  }, [token,router,userCred,BASE_URL,setterURL])
   
 
 

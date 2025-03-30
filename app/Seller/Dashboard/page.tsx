@@ -21,25 +21,16 @@ export default function SellerDashboard() {
     image: string;
   }
 
-  interface UserCred {
-    status: string;
-    totalSales?: number;
-    totalProducts?: number;
-    earnings?: number;
-    pendingOrders?: number;
-    products: Product[];
-    image: string;
-    name: string;
-    id:string
-  }
+ 
 const [products, setproduct] = useState<Product[]>([])
-  const { userCred, token, BASE_URL } = useAuth() as { userCred: UserCred; token: string; BASE_URL: string };
+  const { userCred, token, BASE_URL,setterURL } = useAuth();
   const router=useRouter();
 
   const [isOpen, setisOpen] = useState(false)
   useEffect(() => {
-    console.log(userCred.id)
+   
    if (token==='' || userCred.status !=='Seller') {
+    setterURL(window.location.href)
     router.push(BASE_URL+"auth/Login");
     
   
@@ -51,7 +42,7 @@ const [products, setproduct] = useState<Product[]>([])
        }
     }
     getProduct()
-  }, [token,userCred,router,BASE_URL])
+  }, [token,userCred,BASE_URL,setterURL,router])
   
   
 
@@ -95,7 +86,8 @@ const [products, setproduct] = useState<Product[]>([])
         </div>
 
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-          <table className="w-full text-left">
+          {products.length === 0? (<p>No Products</p>):(
+            <table className="w-full text-left">
             <thead className="border-b text-gray-500 dark:text-gray-300">
               <tr>
                 <th className="p-3">Product</th>
@@ -131,6 +123,8 @@ const [products, setproduct] = useState<Product[]>([])
               ))}
             </tbody>
           </table>
+          )}
+          
         </div>
       </section>
 
@@ -144,7 +138,7 @@ const [products, setproduct] = useState<Product[]>([])
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{userCred.name}</h3>
             <p className="text-gray-500 dark:text-gray-300">Fashion Store Owner</p>
             <button className="mt-2 px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition-all">
-              Edit Profile
+             <Link href={"/Settings/Edit"} className="justify-between">Edit Profile</Link>
             </button>
           </div>
         </div>

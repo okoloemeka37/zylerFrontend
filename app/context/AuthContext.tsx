@@ -12,7 +12,9 @@ const AuthContext=createContext<{
     logout: () => void;
 userCred: {name: string, email: string, status: string, id: string, carts: [], orders: [], review:[],products:[], phone: string, address: string,image:string,created_at:string}; 
     token: string;
+    prevURL:string;
     BASE_URL: string;
+    setterURL:(url:string)=>void;
     User: (data: { name: string, email: string, status: string, id: string, carts: [], orders: [],  review:[],products:[], phone: string, address: string,image:string,created_at:string }) => void;
 }>({
     isAuthenticated: false,
@@ -20,6 +22,8 @@ userCred: {name: string, email: string, status: string, id: string, carts: [], o
     logout: () => {},
     userCred: {name: '', email: '', status: '', id: '', carts: [], orders: [], review:[],products:[], phone: '', address: '',image:'',created_at:''},
     token: '',
+    prevURL:'',
+    setterURL:()=>{},
     BASE_URL: "",
     User: () => {}
 })
@@ -29,7 +33,8 @@ export function AuthProvider({ children }:{children:React.ReactNode}) {
     const [isAuthenticated, setAuthenticated] = useState(false);
     const [userCred, setuserCred] = useState<{name: string, email: string, status: string, id: string, review:[],products:[], carts: [], orders: [], phone: string, address: string,image:string,created_at:string}>({name:'',email:'',status:'',id:'',carts:[],orders:[] , review:[],products:[],phone:'', address:'',image:'',created_at:''});
     const [token, setToken] = useState<string>('')
-    const [BASE_URL] = useState('http://localhost:3000/')
+    const [prevURL,setPrevURL]=useState<string>('http://localhost:3000/')
+    const [BASE_URL] = useState('http://localhost:3000/') //https://zylerfrontend.onrender.com
 
     useEffect(() => {
       const token=localStorage.getItem("Token")!;
@@ -49,11 +54,9 @@ setAuthenticated(true);
 setuserCred(data);
 setToken(token);
 
-if (data['status']!== "Admin") {
-    router.push(`${BASE_URL}user/Profile`)
-}else{
-    router.push(`${BASE_URL+data.status}+/Dashboard`)
-}
+
+    router.push(prevURL)
+
     }
 
     const logout=()=>{
@@ -69,9 +72,11 @@ if (data['status']!== "Admin") {
         setuserCred(data);
     }
     
-
+    const setterURL=(url:string)=>{
+            setPrevURL(url)
+    }
     return(
-        <AuthContext.Provider value={{isAuthenticated,login,logout,userCred,token,BASE_URL,User}}>
+        <AuthContext.Provider value={{isAuthenticated,login,logout,userCred,token,BASE_URL,User,prevURL,setterURL}}>
             {children}
         </AuthContext.Provider>
     )

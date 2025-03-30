@@ -10,13 +10,14 @@ import { useEffect, useState } from "react"
 
 export default function CustomerDashboard() {
     const router=useRouter();
-    const {userCred,token,BASE_URL}=useAuth();
+    const {userCred,token,BASE_URL,setterURL}=useAuth();
     
     useEffect(() => {
-      if (!token) {
-        router.push("http://localhost:3000/auth/Login")
+      if (token=='') {
+        setterURL(window.location.href)
+        router.push(BASE_URL+"auth/Login")
     }
-    }, [token,router,userCred])
+    }, [token,router,userCred,BASE_URL,setterURL])
     
      
     const [user, setuser] = useState({'name':'','email':'','phone':'00000000000','address':''});

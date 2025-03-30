@@ -20,11 +20,11 @@ interface Ivalues {
 
 export default function Register() {
   const router=useRouter();
-  const {login,token,BASE_URL,userCred}=useAuth();
+  const {login,token,setterURL,prevURL}=useAuth();
 
   if (token) {
-    
-      router.push(BASE_URL+userCred!.status+"/Dashboard")
+    router.push(prevURL);
+    setterURL('')
 
   }
 

@@ -18,8 +18,7 @@ interface PageProps {
 
 export default function ProductsList({ params }: PageProps) {
   const router = useRouter();
-  const { BASE_URL } = useAuth()
-  const token: string = localStorage.getItem('Token')!;
+  const { token, userCred, BASE_URL,setterURL } = useAuth()
   const [isload, setisload] = useState(false)
   const [data, setData] = useState([{
     'id': '',
@@ -33,6 +32,14 @@ export default function ProductsList({ params }: PageProps) {
     'image': ''
   }]);
   const [title, setTitle] = useState<string | undefined>()
+
+
+      useEffect(() => {
+        if (token==='') {
+          setterURL(window.location.href)
+          router.push(BASE_URL+"/auth/Login")
+      }
+      }, [token,router,userCred,BASE_URL,setterURL])
 
   useEffect(() => {
     async function unwrapParams() {
@@ -49,7 +56,7 @@ export default function ProductsList({ params }: PageProps) {
   const Delete = async (id: string) => {
     const res = await DeleteProduct(`DeleteProduct/${id}`, token) as { status: number };
     if (res?.status === 200) {
-      router.push("../../../Admin/Product")
+      router.push(BASE_URL+"/Admin/Product")
     }
   }
 

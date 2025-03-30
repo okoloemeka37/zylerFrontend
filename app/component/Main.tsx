@@ -54,7 +54,7 @@ export default function Main({ Product }: MainProps) {
       <div className="h-auto md:h-screen w-full md:w-64 mb-6 md:mr-10 p-4 bg-gray-100 flex flex-col items-center justify-start">
         {Object.keys(cats).map((key) => (
           <div className="relative group w-full max-w-sm my-2" key={key} id={`item-${key}`}>
-            <button className="flex items-center justify-between w-full px-4 py-2 text-left bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">
+            <button className="flex items-center justify-between w-full px-4 py-2 text-left bg-white text-black border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">
               {key === "Latest Products" ? (
                 <span onClick={() => { setshowitem(Product); setTitle(key) }}>{key}</span>
               ) : (

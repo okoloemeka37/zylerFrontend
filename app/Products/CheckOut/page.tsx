@@ -44,7 +44,7 @@ interface OrderDataType {
 
 export default function Checkout() {
   const router = useRouter()
-  const { token, userCred, BASE_URL, User } = useAuth()
+  const { token, userCred, BASE_URL, User,setterURL } = useAuth()
   const [state, setState] = useState<StateType[]>([]);
   const [email, setEmail] = useState('')
   const [price, setPrice] = useState(0)
@@ -64,12 +64,12 @@ export default function Checkout() {
     StackPaymentId: '0'
   })
 
-
   useEffect(() => {
-    if (!token||!userCred) {
+    if (token==='') {
+      setterURL(window.location.href)
       router.push(BASE_URL+"/auth/Login")
   }
-  }, [token,router,userCred,BASE_URL])
+  }, [token,router,userCred,BASE_URL,setterURL])
   
 
   const selectRef = useRef<HTMLSelectElement>(null);

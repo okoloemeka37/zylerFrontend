@@ -11,7 +11,7 @@ import Image from 'next/image';
 export default function EditProfilePage() {
 
     const router=useRouter();
-    const {userCred,token,BASE_URL,User}=useAuth();
+    const {userCred,token,BASE_URL,User,setterURL}=useAuth();
     const [data, setdata] = useState( {name: '', email: '', status: '', id: '', carts: [], orders: [], phone: '', address: '',image:''});
     const [Preview, setPreview] = useState<string>()
     const [selectedImage, setSelectedImage] = useState<File|null>(null)
@@ -21,7 +21,18 @@ export default function EditProfilePage() {
       const [isLoaded, setisLoaded] = useState(false)
 
       const [errors, setErrors] = useState( {name: '', email: '', status: '', id: '', carts: [], orders: [], phone: '', address: '',image:''});
+
 useEffect(() => {
+  if (token==='' || userCred.status !=='Seller') {
+    setterURL(window.location.href)
+    router.push(BASE_URL+"auth/Login");
+    
+  
+   }
+}, [token,userCred,BASE_URL,setterURL,router])
+
+
+      useEffect(() => {
   if (userCred) {
     setdata(userCred);
     setPreview(`https:\/\/raw.githubusercontent.com\/okoloemeka37\/ImageHolder\/main\/uploads\/`+userCred!.image);

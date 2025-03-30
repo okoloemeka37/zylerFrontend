@@ -5,11 +5,19 @@ import React, { useEffect, useState } from "react";
 import { HiOutlineBell, HiCheckCircle, HiOutlineEye } from "react-icons/hi";
 import { single } from '@/app/actions/Product';
 import Link from 'next/link'
+import { useRouter } from "next/navigation";
 
 export default function NotificationsPage (){
+    const router = useRouter();
     const [notifications, setnotifications] = useState([{'notice':'','type_id':0,'id':0,'created_at':'','view':'','type':''}]);
-    const {token,userCred}=useAuth()
-
+   const { token, userCred, BASE_URL,setterURL } = useAuth()
+    useEffect(() => {
+      if (token==='') {
+        setterURL(window.location.href)
+        router.push(BASE_URL+"/auth/Login")
+    }
+    }, [token,router,userCred,BASE_URL,setterURL])
+    
     useEffect(() => {
       
         const ret=async ()=>{

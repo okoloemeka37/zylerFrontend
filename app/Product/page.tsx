@@ -4,14 +4,25 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { cat } from '@/app/actions/Product'
 import { AdmiTag } from '@/app/component/Cards'
+import { useAuth } from '../context/AuthContext'
+import { useRouter } from 'next/navigation'
 
 export default function Products() {
+  const router=useRouter();
   const [Top, setTop] = useState([{'tag':"", 'stockCount':0}]);
   const [Bottom, setBottom] = useState([{'tag':"", 'stockCount':0}]);
   const [Dress, setDress] = useState([{'tag':"", 'stockCount':0}]);
   const [BodyWears, setBodyWears] = useState([{'tag':"", 'stockCount':0}]);
   const [Footwear, setFootwear] = useState([{'tag':"", 'stockCount':0}]);
   const [Accessories, setAccessories] = useState([{'tag':"", 'stockCount':0}]);
+
+   const { token, userCred, BASE_URL,setterURL } = useAuth()
+        useEffect(() => {
+          if (token==='') {
+            setterURL(window.location.href)
+            router.push(BASE_URL+"/auth/Login")
+        }
+        }, [token,router,userCred,BASE_URL,setterURL])
 
   useEffect(() => {
     const Just=['Top','Bottom','Dress','BodyWears','Footwear','Accessories']
@@ -70,7 +81,7 @@ export default function Products() {
 <header className="flex justify-between items-center mb-6 bg-white p-4 rounded-lg shadow-md">
       <h2 className="text-2xl font-semibold text-gray-800">Product By Category</h2>
       <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200">
-        <Link href="/Admin/Product/AddProduct">
+        <Link href={"/Product/AddProduct"}>
         Add New Product
         </Link>
       </button>

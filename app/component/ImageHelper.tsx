@@ -30,7 +30,7 @@ export default function ImageHelper({ Product, height, count,width }: ImageHelpe
   className={`w-${width} h-${height} object-cover transition-transform duration-500 transform group-hover:scale-105`}
   onLoad={handleLoad}
 />
-<img src="/spin.gif" alt="" ref={ChIm}/>
+<img src="/spin.gif" alt="" ref={ChIm} width={100} />
     </div>
   )
 }

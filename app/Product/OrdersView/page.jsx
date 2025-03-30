@@ -10,13 +10,13 @@ export default function AdminOrdersPage() {
 
 
     const router=useRouter()
-    const {token,userCred}=useAuth();
-    useEffect(() => {
-     if (!token) {
-        router.push("http://localhost:3000/auth/Login")
-    }
-    }, [token,router,userCred])
-    
+    const { token, userCred, BASE_URL,setterURL } = useAuth()
+         useEffect(() => {
+           if (token==='') {
+             setterURL(window.location.href)
+             router.push(BASE_URL+"/auth/Login")
+         }
+         }, [token,router,userCred,BASE_URL,setterURL])
    
 
   const [searchTerm, setSearchTerm] = useState("");

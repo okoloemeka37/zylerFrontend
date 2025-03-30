@@ -8,12 +8,13 @@ import ButtonLoaders from '@/app/component/Loaders'
 
 const ForgotPassword = () => {
   const router=useRouter();
-  const {token,BASE_URL,userCred}=useAuth();
-if (token) {
-  
-    router.push(BASE_URL+userCred!.status+"/Dashboard")
-  
-}
+ const {token,setterURL,prevURL,BASE_URL}=useAuth();
+ 
+   if (token) {
+     router.push(prevURL);
+     setterURL('')
+ 
+   }
 
 const [Errors, setErrors] = useState({'email':''});
 const [data, setdata] = useState('');

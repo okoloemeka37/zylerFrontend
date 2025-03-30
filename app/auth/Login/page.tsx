@@ -17,11 +17,11 @@ interface Ivalues {
 
 export default function Login() { 
   const router=useRouter();
-   const {login,token,BASE_URL,userCred}=useAuth();
+   const {login,token,prevURL,setterURL}=useAuth();
 if (token) {
- 
-    router.push(BASE_URL+userCred!.status+"/Dashboard")
 
+    router.push(prevURL);
+    setterURL('')
   
 }
 

@@ -22,12 +22,15 @@ export default function OrderDetailsPage({params}: PageProps) {
 
   const [isLoaded, setisLoaded] = useState(true);
 
-  const { token,userCred } = useAuth();
-
-  if (!token) {
-    router.push("http://localhost:3000/auth/Login");
+  const { token, userCred, BASE_URL,setterURL } = useAuth()
+  useEffect(() => {
+    if (token==='') {
+      setterURL(window.location.href)
+      router.push(BASE_URL+"/auth/Login")
   }
+  }, [token,router,userCred,BASE_URL,setterURL])
 
+  
   useEffect(() => {
     async function unwrap() {
       const resolvedParams = await params;

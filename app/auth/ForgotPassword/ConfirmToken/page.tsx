@@ -14,16 +14,13 @@ const TokenConfirmation = () => {
   const [email, setEmail]= useState('')
 
   const router=useRouter();
-  const {token,BASE_URL,userCred}=useAuth();
-if (token) {
- 
-    if (userCred && 'status' in userCred) {
+const {token,setterURL,prevURL}=useAuth();
 
-        router.push(BASE_URL+userCred!.status+"/Dashboard")
-    
-    }
- 
-}
+  if (token) {
+    router.push(prevURL);
+    setterURL('')
+
+  }
 
   const handleSubmit =async (e: { preventDefault: () => void; }) => {
     setisLoaded(true);

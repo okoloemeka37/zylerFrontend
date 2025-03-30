@@ -1,6 +1,6 @@
 import axios from 'axios';
-const BASEURL='https://zylerbackend.onrender.com/api/';
-//const BASEURL='http://127.0.0.1:8000/api/';
+//const BASEURL='https://zylerbackend.onrender.com/api/';
+const BASEURL='http://127.0.0.1:8000/api/';
 export default async function GetProduct(url:string,token:string) {
   
 try {
@@ -78,6 +78,9 @@ export async function AddProductFunc(url:string,token:string,data:object) {
         }
         if (error.response?.status === 401) {
           return {status:401, 'error':"Invalid Credentials"};
+        }
+        if (error.response?.status === 400) {
+          return {status:400, 'error':"Upload Image Please"};
         }
       }
       

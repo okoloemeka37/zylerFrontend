@@ -16,6 +16,7 @@ import SellerProfile from '@/app/component/SellerComp';
 import ActBtn from '@/app/component/ActBtn';
 import { GetUserController } from '@/app/actions/Auth';
 import { FaStar } from 'react-icons/fa';
+import { DynamicHlights, highlights } from '@/app/component/Funcs';
 
 
 interface Params {
@@ -34,28 +35,14 @@ function resol(dat:{ 'id': number, 'name': string, 'price': number, 'stock': num
     <>
       {Object.entries(obj).map(([key, val]) => (
         <div key={key}>
-          <p ><span className="text-gray-800  mb-4 font-semibold">{key}</span>: {val as React.ReactNode}</p>
+          <p ><span className="text-gray-800  mb-4 font-semibold">{key}</span>: {typeof val === 'string' && val.indexOf(',') !== -1 ? <DynamicHlights text={val} /> : val as React.ReactNode}</p>
         </div>
       ))}
     </>
   );
   }
 }
-function highlights(dat:{ 'id': number,'Description':string, 'name': string, 'price': number, 'stock': number, 'image': string, 'category': string, 'tag': string  }) {  
-  const hig=dat['Description'].split(',');
-  return (
-    <>
-      {hig.map((val,index) => (
-        <div key={index}>
-        <ul className="list-disc list-inside text-gray-700 space-y-2">
-        <li>{val}</li>
-       
-      </ul>
-      </div>
-      ))}
-    </>
-  );
-}
+
 export default function SHOW({ params }: PageProps) {
   //const router = useRouter()
 //  const { token } = useAuth()
@@ -132,7 +119,7 @@ export default function SHOW({ params }: PageProps) {
       setCount(image.length - 1)
       setcCount(4);
     } */
-   console.log(count)
+  
     setCount((prevCount) =>prevCount - 1);
     setcCount((prevCount) =>prevCount - 1);
     if (count===0) {

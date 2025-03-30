@@ -6,17 +6,16 @@ import { DeleteController } from '@/app/actions/Auth';
 import ButtonLoaders from "@/app/component/Loaders";
 import Link from 'next/link'
 import { useRouter } from "next/navigation";
+
 const UsersPage = () => { 
   const router=useRouter();
-    const {token,userCred,BASE_URL}=useAuth()
-   
-useEffect(() => {
-
-  if(token ===''){
-router.push(BASE_URL+'/auth/Login')
-  }
-
-}, [token,BASE_URL,router])
+ const { token, userCred, BASE_URL,setterURL } = useAuth()
+    useEffect(() => {
+      if (token==='') {
+        setterURL(window.location.href)
+        router.push(BASE_URL+"/auth/Login")
+    }
+    }, [token,router,userCred,BASE_URL,setterURL])
 
 
 
