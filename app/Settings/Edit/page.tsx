@@ -84,7 +84,7 @@ if (resp?.status ===200) {
         if (resp?.result) {
           User(resp.result.data.user);
         }
-        router.push(BASE_URL+"user/Profile")
+        router.push(BASE_URL+userCred.status+"/Dashboard")
     }, 5000);  
     }
    
