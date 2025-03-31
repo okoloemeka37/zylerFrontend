@@ -4,7 +4,7 @@ import { useAuth } from '@/app/context/AuthContext';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import {  FaPlus, FaEdit, FaTrash, FaShoppingCart,FaBox,FaMoneyBillWave,FaStar } from 'react-icons/fa';
+import {  FaPlus, FaEdit, FaTrash,FaStar } from 'react-icons/fa';
 
 
 import GetProduct from '@/app/actions/Product';
