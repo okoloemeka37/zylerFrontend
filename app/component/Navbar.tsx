@@ -84,7 +84,7 @@ export default function Navbar() {
           <Link href="/"><Image src="/log2.png" alt="Description" height={100} width={100} /></Link>
         </div>
         <div className="flex-1 mx-4">
-          <div className="form-control sm:w-50 lg:w-full">
+          <div className="form-control sm:w-50 lg:w-full md:w-full">
             <input type="text" placeholder="Search" className="input input-bordered w-full text-center" onInput={ls} ref={searchRef} />
           </div>
         </div>
