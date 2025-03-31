@@ -1,6 +1,6 @@
 import axios from 'axios';
-const BASEURL='https://zylerbackend.onrender.com/api/';
-//const BASEURL='http://127.0.0.1:8000/api/';
+//const BASEURL='https://zylerbackend.onrender.com/api/';
+const BASEURL='http://127.0.0.1:8000/api/';
 export default async function GetProduct(url:string,token:string) {
   
 try {

@@ -54,7 +54,7 @@ const router=useRouter()
               }
       
   return (
-    <div className="flex space-x-4 justify-between">
+    <div className="lg:flex  lg:space-x-4 sm:space-y-6 lg:space-y-0 justify-between">
     <div className='w-full'>{!isWILoaded?(<button onClick={wishList} className="w-full flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md transition-all">
     <FaHeart size={20} />
       {token ?("Add to Wishlist"):(<Link href="/auth/Login">Add to Wishlist</Link>)}

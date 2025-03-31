@@ -26,13 +26,13 @@ export default function AdminOrdersPage() {
 
  useEffect(() => {
    async function ordersAll() {
-    const resp=await cat('ordersAll',token);
+    const resp=userCred.status=='Admin'?await cat('ordersAll',token):await cat(`Sellerorders/${userCred.id}`,token);
  
 setorder(resp?.result);
    }
    
    ordersAll()
- }, [token])
+ }, [token,userCred.id,userCred.status])
  
 
 

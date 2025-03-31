@@ -4,7 +4,7 @@ import { useAuth } from '@/app/context/AuthContext';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import {  FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
+import {  FaPlus, FaEdit, FaTrash, FaShoppingCart,FaBox,FaMoneyBillWave,FaStar } from 'react-icons/fa';
 
 
 import GetProduct from '@/app/actions/Product';
@@ -56,22 +56,25 @@ const [products, setproduct] = useState<Product[]>([])
       </header>
 
       {/* Stats */}
-    {/*   <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    {  <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      
         {[
-          { title: 'Total Sales', value: userCred.totalSales, icon: <FaShoppingCart /> },
+        /*   { title: 'Total Sales', value: userCred.totalSales, icon: <FaShoppingCart /> },
           { title: 'Total Products', value: userCred.totalProducts, icon: <FaBox /> },
-          { title: 'Earnings', value: userCred.earnings, icon: <FaMoneyBillWave /> },
-          { title: 'Pending Orders', value: userCred.pendingOrders, icon: <FaStar /> },
+          { title: 'Earnings', value: userCred.earnings, icon: <FaMoneyBillWave /> }, */
+          { title: 'Orders', value: userCred.orders, icon: <FaStar /> },
         ].map((stat, index) => (
           <div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex items-center justify-between">
-            <div>
+             <Link href={BASE_URL+"Product/OrdersView"}>
+              <div>
               <h2 className="text-lg text-gray-500 dark:text-gray-300">{stat.title}</h2>
-              <p className="text-2xl font-semibold text-gray-900 dark:text-white">{stat.value}</p>
+              <p className="text-2xl font-semibold text-gray-900 dark:text-white">{stat.value.length}</p>
             </div>
             <div className="text-gray-500 dark:text-gray-300 text-2xl">{stat.icon}</div>
+            </Link>
           </div>
         ))}
-      </section> */}
+      </section> }
 
       {/* Product Management */}
       <section className="mt-12">

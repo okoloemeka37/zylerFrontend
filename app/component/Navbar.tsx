@@ -9,7 +9,7 @@ import "../../styles/nav.css"
 import Link from 'next/link';
 import ButtonLoaders from './Loaders';
 import Image from 'next/image';
-import { FaSun, FaMoon } from 'react-icons/fa';
+
 import { useAuth } from '../context/AuthContext';
 
 
@@ -38,18 +38,6 @@ export default function Navbar() {
       document.documentElement.classList.add('dark');
     }
   }, []);
-
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    if (!darkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  };
 
 
 
@@ -104,7 +92,7 @@ export default function Navbar() {
           <Link href="/"><Image src="/log2.png" alt="Description" height={100} width={100} /></Link>
         </div>
         <div className="flex-1 mx-4">
-          <div className="form-control w-full">
+          <div className="form-control sm:w-50 lg:w-full">
             <input type="text" placeholder="Search" className="input input-bordered w-full text-center" onInput={ls} ref={searchRef} />
           </div>
         </div>
@@ -144,11 +132,7 @@ export default function Navbar() {
             </Link>
           )}
         </div>
-        <div>
-        <button onClick={toggleDarkMode} className="p-2 bg-gray-200 dark:bg-gray-700 rounded-full">
-          {darkMode ? <FaSun size={24} /> : <FaMoon size={24} />}
-        </button>
-        </div>
+       
       </div>
 
 

@@ -149,7 +149,7 @@ export default function Checkout() {
       if (submit?.status === 200) {
         setIsLoaded(true);
         User(submit.result.user);
-        router.push(BASE_URL + "user/Profile");
+        router.push(BASE_URL + userCred.status+"/Dashboard");
       } else {
         console.error("Failed to submit order", submit);
       }

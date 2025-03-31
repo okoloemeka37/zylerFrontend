@@ -84,7 +84,7 @@ export default function SHOW({ params }: PageProps) {
         const images = res?.result.data[0].image;
         setImage(images.split(','));
       }
-      fetchSellerData(Number(resolvedParams.ProductView));
+      fetchSellerData(res?.result.data[0].user_id);
     }
        async function fetchSellerData(id:number) {
       try {
@@ -150,7 +150,7 @@ export default function SHOW({ params }: PageProps) {
              
              
             <div className="flex justify-center">
-  <div className="relative w-[900px] h-[500px] overflow-hidden"> {/* Fixed container size */}
+  <div className="relative w-[900px] lg:h-[500px] sm:h-[500px] overflow-hidden"> 
     {/* Image */}
   
     <ImageHelper Product={data} height={'full'} width={'full'} count={count} />
