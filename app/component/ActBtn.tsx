@@ -57,10 +57,10 @@ const router=useRouter()
     <div className="lg:flex  lg:space-x-4 sm:space-y-6 lg:space-y-0 justify-between">
     <div className='w-full'>{!isWILoaded?(<button onClick={wishList} className="w-full flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md transition-all">
     <FaHeart size={20} />
-      {token ?("Add to Wishlist"):(<Link href="/auth/Login">Add to Wishlist</Link>)}
+      {token.length===0?("Add to Wishlist"):(<Link href="/auth/Login">Add to Wishlist</Link>)}
   </button>):(<ButtonLoaders ty={'change'} />)} </div>
           <div className='w-full'> {!isLoaded?(  <button className="flex-1 w-full bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition duration-200" onClick={AddToCart}>
-      {token ? Incart : (<Link href="/auth/Login">Add To Cart</Link>)}
+      {token.length===0? Incart : (<Link href="/auth/Login">Add To Cart</Link>)}
     </button>):(<ButtonLoaders ty={'change'} />)}</div>
 
    
