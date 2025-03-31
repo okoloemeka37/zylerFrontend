@@ -29,15 +29,7 @@ export default function Navbar() {
   const searchRef = useRef<HTMLInputElement>(null);
   const liveSearchRef = useRef<HTMLUListElement>(null);
   const [cartNum, setcartNum] = useState(0)
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    const storedTheme = localStorage.getItem('theme');
-    if (storedTheme === 'dark') {
-      setDarkMode(true);
-      document.documentElement.classList.add('dark');
-    }
-  }, []);
+ 
 
 
 
