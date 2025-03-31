@@ -1,23 +1,23 @@
 {
-  "name": "StillSearching.com",
-  "short_name": "ss.com",
-  "theme_color": "#e32232",
-  "background_color": "#20272e",
+  "name": "Zyler",
+  "short_name": "ZY",
+  "theme_color": "#4a1ee8",
+  "background_color": "#4a1ee8",
   "start_url": "/",
-  "id": "ss.com",
+  "id": "Zyler.com",
   "display": "standalone",
   "description": "You Will love it",
   "icons": [
     {
       "purpose": "maskable",
       "sizes": "512x512",
-      "src": "icons/ss.png",
+      "src": "icons/log2.png",
       "type": "image/png"
     },
     {
       "purpose": "any",
       "sizes": "512x512",
-      "src": "icons/ss.png",
+      "src": "icons/log2.png",
       "type": "image/png"
     }
   ],
