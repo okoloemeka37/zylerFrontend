@@ -11,7 +11,15 @@ export default function ImageHelper({ Product, height, count,width }: ImageHelpe
 
    
   const images=Product.image;
-  const image=images.split(',');
+  let image;
+  console.log(images)
+  if (images.split(',')!== undefined) {
+     image=images.split(',');
+  }
+  else{
+image=images
+  }
+ 
  
 
     const ChIm = useRef<HTMLImageElement>(null)

@@ -139,7 +139,7 @@ export default function SHOW({ params }: PageProps) {
  }else{
   const others = resol(data);
   return (
-    <div className="container mx-auto py-10 px-4">
+    <div className="container mx-auto py-10 px-4 bg-white">
       {isLoad ? (<SingleProduct />) :
         (
           <div className="flex flex-col lg:flex-row gap-10">

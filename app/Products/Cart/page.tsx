@@ -40,7 +40,7 @@ useEffect(() => {
       
       const resp=await single(`GetCart${userCred!.id}`,token);
      setData(resp?.result)
-     console.log(resp?.result.length)
+     console.log(resp?.result)
       setIsLoaded(false)
     }
   rt()
@@ -94,7 +94,7 @@ if (PageLoading) {
    {!IsLoaded?data.map((item,index)=>
   (
   <div className="flex items-center justify-between border-b pb-4" key={index}>
-  <div className="flex items-center">
+  <div className="lg:flex md:flex  items-center">
       <div className='w-40'> <ImageHelper Product={item} width={'full'} height={36} count={0} /></div>
     <div>
       <h3 className="text-lg font-semibold text-gray-800">

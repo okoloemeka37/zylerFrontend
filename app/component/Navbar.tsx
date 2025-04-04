@@ -85,7 +85,7 @@ export default function Navbar() {
         </div>
         <div className="flex-1 mx-4">
           <div className="form-control sm:w-50 lg:w-full md:w-full">
-            <input type="text" placeholder="Search" className="input input-bordered w-full text-center" onInput={ls} ref={searchRef} />
+            <input type="text" placeholder="Search" className="input input-bordered w-full text-center bg-white" onInput={ls} ref={searchRef} />
           </div>
         </div>
         <Link href={BASE_URL+"/Products/Cart"}><FaShoppingCart className="w-6 h-6 text-gray-800" /></Link>
